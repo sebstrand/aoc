@@ -1,6 +1,6 @@
 import re
 import itertools
-from collections import namedtuple
+from collections import namedtuple, Counter
 from functools import reduce
 
 
@@ -76,3 +76,16 @@ def visit(lst):
 def factors(n):
     return set(reduce(list.__add__,
                       ([i, n//i] for i in range(1, int(n**0.5) + 1) if n % i == 0)))
+
+
+def prime_factors(n):
+    p_factors = []
+    divisor = 2
+
+    while n > 1:
+        while n % divisor == 0:
+            p_factors.append(divisor)
+            n //= divisor
+        divisor += 1
+
+    return p_factors
