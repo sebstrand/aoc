@@ -1,0 +1,4 @@
+#!/usr/bin/bash
+
+PYTHONPATH="../..:$PYTHONPATH" python -m "day$1"
+
