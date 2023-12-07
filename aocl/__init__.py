@@ -1,6 +1,8 @@
 import re
 import itertools
 from collections import namedtuple
+from functools import reduce
+
 
 digit_names = ('zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine')
 
@@ -69,3 +71,8 @@ def splits(s, sep=(r' ',), f=None):
 
 def visit(lst):
     return itertools.chain.from_iterable(lst)
+
+
+def factors(n):
+    return set(reduce(list.__add__,
+                      ([i, n//i] for i in range(1, int(n**0.5) + 1) if n % i == 0)))
