@@ -20,6 +20,9 @@ card_values = {
 }
 
 
+use_jokers = True
+
+
 def main():
     lines = read_lines('input')
 
@@ -29,14 +32,18 @@ def main():
         bid = int(bid)
         hands_bids.append((hand, bid))
 
-    use_jokers = False
+    if use_jokers:
+        card_values['J'] = 1
 
     hands_bids.sort(key=functools.cmp_to_key(lambda hb1, hb2: compare(hb1[0], hb2[0])))
-    winnings = sum((rank+1) * hb[1] for rank, hb in enumerate(hands_bids))
+    winnings = sum((rank0+1) * hb[1] for rank0, hb in enumerate(hands_bids))
+
+    for rank0, hb in enumerate(hands_bids):
+        print(hb[0], hand_strength(hb[0]), f'b{hb[1]:3} r{rank0 + 1:3}')
 
     print('winnings:', winnings)
     if use_jokers:
-        pass
+        assert winnings == 253718286
     else:
         assert winnings == 255048101
 
@@ -63,24 +70,75 @@ def compare(hand1, hand2):
 
 def hand_strength(hand):
     c = Counter(hand)
+
     v = [v for v in c.values()]
     v.sort(reverse=True)
+
     if v[0] == 5:
-        return 5.0
+        strength = 5.0
     elif v[0] == 4:
-        return 4.0
+        strength = 4.0
     elif v[0] == 3:
         if v[1] == 2:
-            return 3.5   # full house
+            strength = 3.5   # full house
         else:
-            return 3.0   # three of a kind
+            strength = 3.0   # three of a kind
     elif v[0] == 2:
         if v[1] == 2:
-            return 2.5  # two pair
+            strength = 2.5  # two pair
         else:
-            return 2.0  # one pair
+            strength = 2.0  # one pair
     else:
-        return 1.0
+        strength = 1.0
+
+    jokers = c['J']
+    if use_jokers and jokers > 0 and strength < 5.0:
+        if jokers == 4:
+            # four jokers can copy the remaining card -> 5-of-a-kind
+            strength = 5.0
+        elif jokers == 3:
+            if strength == 3.5:
+                # remaining cards are a pair -> 5-of-a-kind
+                strength = 5.0
+            else:
+                strength = 4.0  # copy one of the remaining cards -> 4-of-a-kind
+        elif jokers == 2:
+            if strength == 4.0:
+                # not possible
+                assert False
+            elif strength == 3.5:
+                # remaining three cards are identical, copy them -> 5-of-a-kind
+                strength = 5.0
+            elif strength == 3.0:
+                # not possible
+                assert False
+            elif strength == 2.5:
+                # there's another pair, copy them -> 4-of-a-kind
+                strength = 4.0
+            elif strength == 2.0:
+                # 2 jokers + 3 dissimilar cards, copy one of the remaining cards -> 3-of-a-kind
+                strength = 3.0
+        elif jokers == 1:
+            if strength == 4.0:
+                # copy the other four identical cards -> 5-of-a-kind
+                strength = 5.0
+            elif strength == 3.5:
+                # not possible
+                assert False
+            elif strength == 3.0:
+                # 3-of-a-kind + joker + other card -> 4-of-a-kind
+                strength = 4.0
+            elif strength == 2.5:
+                # joker + two pairs -> full house
+                strength = 3.5
+            elif strength == 2.0:
+                # pair + joker + 2 dissimilar cards -> 3-of-a-kind
+                strength = 3.0
+            elif strength == 1.0:
+                # joker + 4 dissimilar cards -> pair
+                strength = 2.0
+
+    return strength
 
 
 
