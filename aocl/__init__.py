@@ -1,7 +1,8 @@
 import re
 import itertools
-from collections import namedtuple, Counter
+from collections import namedtuple
 from functools import reduce
+from PIL import Image
 
 
 digit_names = ('zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine')
@@ -89,3 +90,46 @@ def prime_factors(n):
         divisor += 1
 
     return p_factors
+
+
+def neighbors_2d(grid, pos):
+    r, c = pos
+    n = [None, None, None, None]
+
+    if r > 0:
+        n[0] = ((r-1, c), grid[r-1, c])
+    if r < len(grid) - 1:
+        n[1] = ((r+1, c), grid[r+1, c])
+    if c > 0:
+        n[2] = ((r, c-1), grid[r, c-1])
+    if c < len(grid[0]) - 1:
+        n[3] = ((r, c+1), grid[r, c+1])
+    return n
+
+
+def visualize_grid(grid, filename, tile_map, bg_color=(0, 0, 0, 0)):
+    rows, cols = len(grid), len(grid[0])
+    first_tile = tuple(tile_map.values())[0]
+    tile_height, tile_width = len(first_tile), len(first_tile[0])
+    image = Image.new('RGBA', (cols*tile_width, rows*tile_height), color=bg_color)
+
+    for tile_id in tile_map:
+        tile_data = tile_map[tile_id]
+        tile = Image.new('RGBA', (tile_width, tile_height))
+        for x in range(tile_width):
+            for y in range(tile_height):
+                color = tile_data[y][x]
+                if color:
+                    tile.putpixel((x, y), color)
+                    tile.putpixel((x, y), color)
+                    tile.putpixel((x, y), color)
+        tile_map[tile_id] = tile
+
+    for r in range(rows):
+        for c in range(cols):
+            grid_data = grid[r, c]
+            if grid_data and grid_data in tile_map:
+                tile = tile_map[grid_data]
+                image.paste(tile, (c*tile_width, r*tile_height))
+
+    image.save(filename)
