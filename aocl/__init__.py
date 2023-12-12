@@ -133,3 +133,17 @@ def visualize_grid(grid, filename, tile_map, bg_color=(0, 0, 0, 0)):
                 image.paste(tile, (c*tile_width, r*tile_height))
 
     image.save(filename)
+
+
+def contains_sublist(lst, sublist):
+    if len(sublist) == 0:
+        return True
+    elif len(lst) == len(sublist):
+        return lst == sublist
+    elif len(sublist) > len(lst):
+        return False
+    else:
+        for i in range(len(lst)):
+            if lst[i] == sublist[0] and lst[i:i + len(sublist)] == sublist:
+                return True
+    return False
