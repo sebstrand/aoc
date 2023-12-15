@@ -92,18 +92,24 @@ def prime_factors(n):
     return p_factors
 
 
-def neighbors_2d(grid, pos):
+def neighbors_2d(grid, pos, named=False):
     r, c = pos
-    n = [None, None, None, None]
+
+    if named:
+        n0, n1, n2, n3 = 'n', 's', 'w', 'e'
+        n = {n0: None, n1: None, n2: None, n3: None}
+    else:
+        n0, n1, n2, n3 = 0, 1, 2, 3
+        n = [None, None, None, None]
 
     if r > 0:
-        n[0] = ((r-1, c), grid[r-1, c])
+        n[n0] = ((r-1, c), grid[r-1][c])
     if r < len(grid) - 1:
-        n[1] = ((r+1, c), grid[r+1, c])
+        n[n1] = ((r+1, c), grid[r+1][c])
     if c > 0:
-        n[2] = ((r, c-1), grid[r, c-1])
+        n[n2] = ((r, c-1), grid[r][c-1])
     if c < len(grid[0]) - 1:
-        n[3] = ((r, c+1), grid[r, c+1])
+        n[n3] = ((r, c+1), grid[r][c+1])
     return n
 
 
