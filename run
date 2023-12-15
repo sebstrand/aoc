@@ -1,4 +1,10 @@
 #!/usr/bin/bash
 
-PYTHONPATH="../..:$PYTHONPATH" python -m "day$1"
+PYTHONPATH="../..:$PYTHONPATH" \
+    systemd-run \
+        --user \
+        --scope \
+        --property MemoryAccounting=1 \
+        --property MemoryMax=40G \
+    python -m "day$1"
 
