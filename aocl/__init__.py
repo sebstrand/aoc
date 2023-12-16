@@ -3,6 +3,9 @@ import itertools
 from collections import namedtuple
 from functools import reduce
 from PIL import Image
+import time
+from pathlib import Path
+import traceback
 
 
 digit_names = ('zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine')
@@ -10,6 +13,31 @@ digit_names = ('zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'e
 _labeline_n_re = re.compile(r'([^\d]*?) *(\d+):\s*(.*)')
 _labeline_re = re.compile(r'([^:]*):\s*(.*)')
 _labeline_type = namedtuple('labeline', ['label', 'number', 'content'])
+
+
+def run(problem, f, input_file, expected_answer, *args, **kwargs):
+    problem_path = Path(problem).parent
+    input_file = problem_path.joinpath(input_file)
+    print('\nRunning', problem_path)
+    print(f'  Input = "{input_file.relative_to(problem_path)}"')
+    print('  Args =', args, kwargs)
+    start = time.time()
+    try:
+        answer = f(input_file, *args, **kwargs)
+        if answer == expected_answer:
+            print('Answer:', answer)
+        else:
+            print('==== WRONG ANSWER ====')
+            print('  Expected:', expected_answer)
+            print('    Actual:', answer)
+    except KeyboardInterrupt:
+        print('Canceled by user')
+    except Exception as e:
+        print('Failed with', e.__class__.__name__)
+        traceback.print_exception(e)
+
+    time_taken = time.time() - start
+    print('Time taken:', f'{time_taken:.04}s')
 
 
 def read_lines(filename, strip='a', skip_empty=True):

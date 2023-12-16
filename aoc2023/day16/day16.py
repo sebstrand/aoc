@@ -1,5 +1,4 @@
 from aocl import *
-import time
 
 bounce = {
     '/':  ['e', 'w', 'n', 's'],
@@ -10,30 +9,27 @@ bounce = {
 }
 
 
-def main():
-    grid = read_lines('input')
+def main(input_file, find_max=False):
+    grid = read_lines(input_file)
     rows, cols = len(grid), len(grid[0])
 
     starts = []
-    for r in range(rows):
-        starts.append(((r, 0), 'e'))
-        starts.append(((r, cols-1), 'w'))
-    for c in range(cols):
-        starts.append(((0, c), 's'))
-        starts.append(((rows-1, c), 'n'))
+    if find_max:
+        for r in range(rows):
+            starts.append(((r, 0), 'e'))
+            starts.append(((r, cols-1), 'w'))
+        for c in range(cols):
+            starts.append(((0, c), 's'))
+            starts.append(((rows-1, c), 'n'))
+    else:
+        starts.append(((0, 0), 'e'))
 
-    first_energized = None
     max_energized = 0
-    start = time.time()
     for start_pos, start_dir in starts:
         energized = energize(grid, start_pos, start_dir)
-        if first_energized is None:
-            first_energized = energized
         max_energized = max(max_energized, energized)
 
-    print('first energized:', first_energized)
-    print('max energized:', max_energized)
-    print('time taken:', time.time() - start)
+    return max_energized
 
 
 def energize(grid, start_pos, start_direction):
@@ -96,4 +92,11 @@ class Beam:
 
 
 if __name__ == '__main__':
-    main()
+    _input_file = 'input'
+    expected = {
+        'input': (7074, 7530),
+        'example': (46, 51),
+    }[_input_file]
+
+    run(__file__, main, _input_file, expected[0], find_max=False)
+    run(__file__, main, _input_file, expected[1], find_max=True)
