@@ -1,8 +1,8 @@
-from aocl import *
-import time
-import numpy as np
-from concurrent.futures import ProcessPoolExecutor, as_completed
 import math
+import re
+import time
+from concurrent.futures import ProcessPoolExecutor, as_completed
+from aocl import *
 
 
 expand = 5
@@ -11,26 +11,29 @@ expand = 5
 def main():
     records = [splits(s) for s in read_lines('input')]
 
-    if expand > 1:
-        for i, (springs, groups) in enumerate(records):
-            springs = springs.replace('.', '_').replace('?', '.')
-            groups = ints(groups)
-
+    for i, (springs, groups) in enumerate(records):
+        springs = springs.replace('.', '_').replace('?', '.')
+        groups = ints(groups)
+        if expand > 1:
             springs = '.'.join([springs] * expand)
             groups *= expand
             records[i] = (springs, groups)
+        records[i] = (springs, groups)
 
     start = time.time()
     total_arrangements = 0
 
     # records = records[:201]
-    total_finished = 0
+    unfinished = (265, 303, 311, 316, 399, 450, 483, 496, 531, 535, 625, 807, 816, 840, 845, 925, 935)
+    # unfinished = list(range(len(records)))
+    total_finished = len(records) - len(unfinished)
 
     with ProcessPoolExecutor() as executor:
         future_to_idx = {
-            executor.submit(begin_arrange, springs, groups): i
+            executor.submit(begin_arrange, i, springs, groups): i
             for i, (springs, groups)
             in enumerate(records)
+            if i in unfinished
         }
         for future in as_completed(future_to_idx):
             total_finished += 1
@@ -58,8 +61,9 @@ def main():
         assert total_arrangements == 7007
 
 
-def begin_arrange(springs, groups):
-    arrangement = np.zeros(len(groups)*2 + 1, dtype=np.byte) - 1
+def begin_arrange(idx, springs, groups):
+    print(f'start r#{idx:04}')
+    arrangement = [-1] * (len(groups)*2 + 1)
     return arrange(arrangement, springs, groups)
 
 
@@ -68,13 +72,11 @@ def arrange(arrangement, springs, groups, indent=4):
     gs = groups[0]
     ge = groups[-1]
 
-    unset = np.nonzero(arrangement < 0)[0]
-    if len(unset) < 1:
-        # print(' '*indent + 'no unset')
+    if min(arrangement) >= 0:
         return 0
 
-    first_unset = unset[0]
-    last_unset = unset[-1]
+    first_unset = arrangement.index(-1)
+    last_unset = len(arrangement) - 1 - arrangement[::-1].index(-1)
     # print(' '*indent + 'arrange', last_unset - first_unset + 1, show_arrangement(arrangement), 'of', groups)
 
     gaps = len(groups) + 1
@@ -89,8 +91,8 @@ def arrange(arrangement, springs, groups, indent=4):
     is_last = len(groups) <= 2
     is_single = len(groups) == 1
 
-    used_before = arrangement[:first_unset].sum()
-    used_after = arrangement[last_unset + 1:].sum()
+    used_before = sum(arrangement[:first_unset])
+    used_after = sum(arrangement[last_unset + 1:])
     remaining_springs = springs[used_before:len(springs)-used_after]
     free_len = len(remaining_springs) - min_p_len
     # print(' '*indent + 'rs', remaining_springs, 'flen', free_len, 'minos', min_outside_space)
@@ -148,7 +150,10 @@ def arrange(arrangement, springs, groups, indent=4):
                     arrangement[last_unset] = e
                     # print(' '*indent + 'potential match, checking inner groups')
                     num_arrangements += arrange(arrangement, springs, inner_groups, indent + 4)
-                    arrangement[first_unset:last_unset+1] = -1
+                    arrangement[first_unset] = -1
+                    arrangement[first_unset+1] = -1
+                    arrangement[last_unset-1] = -1
+                    arrangement[last_unset] = -1
             # else:
                 # print(' '*indent + '=> no 3', test_s, remaining_springs[:len(test_s)], '*', test_e, remaining_springs[-len(test_e):], 'slen', len(remaining_springs))
     # print(' '*indent + 'arrange complete', num_arrangements)
