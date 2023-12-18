@@ -21,8 +21,8 @@ _labeline_type = namedtuple('labeline', ['label', 'number', 'content'])
 
 def run(puzzle, f, input_file, expected_answer, *args, **kwargs):
     puzzle_path = Path(puzzle).parent
-    _fetch_puzzle_input(puzzle_path)
     input_file = puzzle_path.joinpath(input_file)
+    _fetch_puzzle_input(puzzle_path)
     print('\nRunning', puzzle_path)
     print(f'  Input = "{input_file.relative_to(puzzle_path)}"')
     print('  Args =', args, kwargs)
@@ -34,7 +34,10 @@ def run(puzzle, f, input_file, expected_answer, *args, **kwargs):
         else:
             print('==== WRONG ANSWER ====')
             print('  Expected:', expected_answer)
-            print('    Actual:', answer)
+            if answer is None or expected_answer is None:
+                print('    Actual:', answer)
+            else:
+                print('    Actual:', answer, ('(too big)', '(too small)')[answer < expected_answer])
     except KeyboardInterrupt:
         print('Canceled by user')
     except Exception as e:
@@ -48,7 +51,6 @@ def run(puzzle, f, input_file, expected_answer, *args, **kwargs):
 def _fetch_puzzle_input(puzzle_path):
     year, day = ints(puzzle_path.as_posix())[-2:]
     input_file = puzzle_path.joinpath('input')
-    print('Input file', input_file.as_posix())
     if not input_file.exists():
         conf = _read_aoc_config()
         cookies = {'session': conf.get('session_cookie')}
