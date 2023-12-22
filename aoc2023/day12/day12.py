@@ -5,7 +5,7 @@ from concurrent.futures import ProcessPoolExecutor, as_completed
 from aocl import *
 
 
-expand = 5
+expand = 3
 
 
 def main():
@@ -23,9 +23,9 @@ def main():
     start = time.time()
     total_arrangements = 0
 
-    # records = records[:201]
-    unfinished = (265, 303, 311, 316, 399, 450, 483, 496, 531, 535, 625, 807, 816, 840, 845, 925, 935)
-    # unfinished = list(range(len(records)))
+    records = records[303:304]
+    # unfinished = (303, 625, 925)
+    unfinished = list(range(len(records)))
     total_finished = len(records) - len(unfinished)
 
     with ProcessPoolExecutor() as executor:
@@ -110,13 +110,15 @@ def arrange(arrangement, springs, groups, indent=4):
         if 0 <= remaining_springs.find('#') < s:
             break
         test_s = '_' * s + '#' * gs
+        if not re.match(remaining_springs[:len(test_s)], test_s):
+            continue
 
         for e in range(min_outside_space, (min_outside_space + free_len + 1) - (s-min_outside_space)):
             if remaining_springs.rfind('#', len(remaining_springs)-e) >= 0:
                 break
             test_e = '#' * ge + '_' * e
 
-            if re.match(remaining_springs[:len(test_s)], test_s) and re.match(remaining_springs[-len(test_e):], test_e):
+            if re.match(remaining_springs[-len(test_e):], test_e):
                 if is_last:
                     if is_single and s + gs + e < len(remaining_springs):
                         # print(' '*indent + '=> no 1')
