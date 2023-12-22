@@ -23,9 +23,9 @@ def main():
     start = time.time()
     total_arrangements = 0
 
-    records = records[303:304]
-    # unfinished = (303, 625, 925)
-    unfinished = list(range(len(records)))
+    # records = records[303:304]
+    unfinished = (303, 625, 925)
+    # unfinished = list(range(len(records)))
     total_finished = len(records) - len(unfinished)
 
     with ProcessPoolExecutor() as executor:
