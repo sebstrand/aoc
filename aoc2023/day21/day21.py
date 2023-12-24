@@ -26,7 +26,7 @@ def solve(input_file, p1=True):
         # print('A*', location)
         steps = a_star(garden, start_pos, location)
         if steps > 64:
-            print('bad location', location, 'steps', steps, 'manhattan', manhattan(start_pos, location))
+            # print('bad location', location, 'steps', steps, 'manhattan', manhattan(start_pos, location))
             bad_locations.add(location)
 
     locations = locations.difference(bad_locations)
@@ -36,14 +36,14 @@ def solve(input_file, p1=True):
         for c, col in enumerate(row):
             if (r, c) == start_pos:
                 print('S', end='')
-            elif (r, c) in bad_locations:
+            elif (r, c) in locations:
                 print('O', end='')
             elif garden[r, c] > 0:
                 print('.', end='')
             else:
                 print('#', end='')
         print()
-    print('Num locations:', len(locations))
+    return len(locations)
 
 
 def no_step(garden, start_pos, max_steps):
