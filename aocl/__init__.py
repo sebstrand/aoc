@@ -1,4 +1,5 @@
 from aocl.lib import PriorityQueue
+from aocl.lib import TermColors
 from aocl.lib import contains_sublist
 from aocl.lib import digit_names
 from aocl.lib import factors, prime_factors
