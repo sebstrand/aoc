@@ -9,6 +9,7 @@ import traceback
 from PIL import Image
 from collections import namedtuple
 from functools import reduce
+from heapq import heappush, heappop
 from pathlib import Path
 
 
@@ -222,3 +223,30 @@ def polygon_area(coordinates):
         + np.dot(x, np.roll(y, 1))
         - np.dot(y, np.roll(x, 1))
     )
+
+
+class PriorityQueue:
+    def __init__(self, max_q=False):
+        self.max_q = max_q
+        self.entries = {}
+        self.pq = []
+
+    def __len__(self):
+        return len(self.entries)
+
+    def add(self, priority, item):
+        if item in self.entries:
+            self.entries.pop(item)[-1] = ()
+        if self.max_q:
+            priority = -priority
+        entry = [priority, item]
+        self.entries[item] = entry
+        heappush(self.pq, entry)
+
+    def pop(self):
+        while self.pq:
+            priority, item = heappop(self.pq)
+            if item != ():
+                del self.entries[item]
+                return item
+        raise KeyError('priority queue is empty')
