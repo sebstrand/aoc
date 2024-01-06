@@ -5,6 +5,6 @@ PYTHONPATH="../..:$PYTHONPATH" \
         --user \
         --scope \
         --property MemoryAccounting=1 \
-        --property MemoryMax=40G \
+        --property MemoryMax=35G \
     python -m "day$1"
 
