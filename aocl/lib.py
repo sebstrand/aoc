@@ -228,8 +228,8 @@ def polygon_area(coordinates):
 class PriorityQueue:
     def __init__(self, max_q=False):
         self.max_q = max_q
-        self.entries = {}
-        self.pq = []
+        self.pq = self.entries = None
+        self.clear()
 
     def __len__(self):
         return len(self.entries)
@@ -250,6 +250,10 @@ class PriorityQueue:
                 del self.entries[item]
                 return item
         raise KeyError('priority queue is empty')
+
+    def clear(self):
+        self.pq = []
+        self.entries = {}
 
 
 class TermColors:
