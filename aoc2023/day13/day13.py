@@ -2,8 +2,8 @@ from aocl import *
 import numpy as np
 
 
-def main():
-    lines = read_lines('input', skip_empty=False)
+def solve(input_file, smudge):
+    lines = read_lines(input_file, skip_empty=False)
 
     patterns = []
     pattern = []
@@ -16,17 +16,12 @@ def main():
 
     patterns.append(np.array(pattern, dtype=np.byte))
 
-    smudge = True
     result = 0
     for pattern in patterns:
         row, col = process_pattern(pattern, smudge=smudge)
         result += row + 100 * col
 
-    print('result:', result)
-    if smudge:
-        assert result == 35799
-    else:
-        assert result == 36448
+    return result
 
 
 def process_pattern(pattern, smudge=False):
@@ -72,6 +67,17 @@ def process_pattern(pattern, smudge=False):
 
     print('failed pattern:\n', pattern)
     assert False
+
+
+def main():
+    _input_file = 'input'
+    expected = {
+        'input': (36448, 35799),
+        'example': (405, 400),
+    }[_input_file]
+
+    run(__file__, solve, _input_file, expected[0], smudge=False)
+    run(__file__, solve, _input_file, expected[1], smudge=True)
 
 
 if __name__ == '__main__':

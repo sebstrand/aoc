@@ -1,15 +1,16 @@
+import re
 from aocl import *
 
 
-def main():
-    lines = read_lines('input')
+def solve(input_file, p1=True):
+    lines = read_lines(input_file)
 
     first_p1 = re.compile(r'\D*(\d)')
     last_p1 = re.compile(r'.*(\d)')
 
     digit_names_re = '|'.join(digit_names)
-    first_p2 = re.compile(f'.*?(\d|{digit_names_re})')
-    last_p2 = re.compile(f'.*(\d|{digit_names_re})')
+    first_p2 = re.compile(fr'.*?(\d|{digit_names_re})')
+    last_p2 = re.compile(fr'.*(\d|{digit_names_re})')
 
     sum_p1 = 0
     sum_p2 = 0
@@ -25,11 +26,10 @@ def main():
         digit2 = to_digit(last_p2.match(line).group(1))
         sum_p2 += int(digit1 + digit2)
 
-    print('calibration value p1:', sum_p1)
-    assert sum_p1 == 54597
-
-    print('calibration value p2:', sum_p2)
-    assert sum_p2 == 54504
+    if p1:
+        return sum_p1
+    else:
+        return sum_p2
 
 
 def to_digit(maybe_digit):
@@ -37,6 +37,17 @@ def to_digit(maybe_digit):
         return str(digit_names.index(maybe_digit))
     except ValueError:
         return maybe_digit
+
+
+def main():
+    real_input = True
+
+    if real_input:
+        run(__file__, solve, 'input', 54597, p1=True)
+        run(__file__, solve, 'input', 54504, p1=False)
+    else:
+        run(__file__, solve, 'example', 142, p1=True)
+        run(__file__, solve, 'examplep2', 281, p1=False)
 
 
 if __name__ == '__main__':

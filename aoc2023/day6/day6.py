@@ -2,16 +2,13 @@ from aocl import *
 from functools import reduce
 
 
-ignore_spaces = True
-
-
-def main():
-    lines = read_lines('input')
+def solve(input_file, p1=True):
+    lines = read_lines(input_file)
 
     time = labeline(lines[0], numbered=False)
     distance = labeline(lines[1], numbered=False)
 
-    if ignore_spaces:
+    if not p1:
         races = [(
             int(time.content.replace(' ', '')),
             int(distance.content.replace(' ', ''))
@@ -27,11 +24,18 @@ def main():
         win_counts.append(len(distances))
 
     result = reduce(lambda a, b: a*b, win_counts)
-    print('result:', result)
-    if ignore_spaces:
-        assert result == 43663323
-    else:
-        assert result == 625968
+    return result
+
+
+def main():
+    _input_file = 'input'
+    expected = {
+        'input': (625968, 43663323),
+        'example': (288, 71503),
+    }[_input_file]
+
+    run(__file__, solve, _input_file, expected[0], p1=True)
+    run(__file__, solve, _input_file, expected[1], p1=False)
 
 
 if __name__ == '__main__':

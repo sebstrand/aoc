@@ -20,11 +20,8 @@ card_values = {
 }
 
 
-use_jokers = True
-
-
-def main():
-    lines = read_lines('input')
+def solve(input_file, p1=True):
+    lines = read_lines(input_file)
 
     hands_bids = []
     for line in lines:
@@ -32,25 +29,20 @@ def main():
         bid = int(bid)
         hands_bids.append((hand, bid))
 
+    use_jokers = not p1
     if use_jokers:
         card_values['J'] = 1
 
-    hands_bids.sort(key=functools.cmp_to_key(lambda hb1, hb2: compare(hb1[0], hb2[0])))
+    hands_bids.sort(key=functools.cmp_to_key(lambda hb1, hb2: compare(hb1[0], hb2[0], use_jokers)))
     winnings = sum((rank0+1) * hb[1] for rank0, hb in enumerate(hands_bids))
-
-    for rank0, hb in enumerate(hands_bids):
-        print(hb[0], hand_strength(hb[0]), f'b{hb[1]:3} r{rank0 + 1:3}')
-
-    print('winnings:', winnings)
-    if use_jokers:
-        assert winnings == 253718286
-    else:
-        assert winnings == 255048101
+    # for rank0, hb in enumerate(hands_bids):
+    #     print(hb[0], hand_strength(hb[0]), f'b{hb[1]:3} r{rank0 + 1:3}')
+    return winnings
 
 
-def compare(hand1, hand2):
-    s1 = hand_strength(hand1)
-    s2 = hand_strength(hand2)
+def compare(hand1, hand2, use_jokers):
+    s1 = hand_strength(hand1, use_jokers)
+    s2 = hand_strength(hand2, use_jokers)
     # print('s1, s2:', hand1, s1, '::', hand2, s2)
 
     if s1 > s2:
@@ -68,7 +60,7 @@ def compare(hand1, hand2):
     return 0
 
 
-def hand_strength(hand):
+def hand_strength(hand, use_jokers):
     c = Counter(hand)
 
     v = [v for v in c.values()]
@@ -140,6 +132,16 @@ def hand_strength(hand):
 
     return strength
 
+
+def main():
+    _input_file = 'input'
+    expected = {
+        'input': (255048101, 253718286),
+        'example': (6440, 5905),
+    }[_input_file]
+
+    run(__file__, solve, _input_file, expected[0], p1=True)
+    run(__file__, solve, _input_file, expected[1], p1=False)
 
 
 if __name__ == '__main__':

@@ -2,11 +2,8 @@ from aocl import *
 from collections import defaultdict, deque
 
 
-use_seed_ranges = True
-
-
-def main():
-    lines = read_lines('input')
+def solve(input_file, p1=True):
+    lines = read_lines(input_file)
 
     seeds = []
     maps = defaultdict(list)
@@ -20,10 +17,10 @@ def main():
         else:
             add_to_map(maps, label.replace(' map', ''), ints(line))
 
-    if use_seed_ranges:
-        seed_ranges = deque(zip(seeds[::2], seeds[1::2]))
-    else:
+    if p1:
         seed_ranges = deque(zip(seeds, [1]*len(seeds)))
+    else:
+        seed_ranges = deque(zip(seeds[::2], seeds[1::2]))
 
     soil_ranges = lookup(maps['seed-to-soil'], seed_ranges)
     fertilizer_ranges = lookup(maps['soil-to-fertilizer'], soil_ranges)
@@ -33,12 +30,7 @@ def main():
     humidity_ranges = lookup(maps['temperature-to-humidity'], temperature_ranges)
     location_ranges = lookup(maps['humidity-to-location'], humidity_ranges)
 
-    min_location = min([start for start, n in location_ranges])
-    print('min location:', min_location)
-    if use_seed_ranges:
-        assert min_location == 108956227
-    else:
-        assert min_location == 322500873
+    return min([start for start, n in location_ranges])
 
 
 def add_to_map(maps, map_name, range_spec):
@@ -74,6 +66,17 @@ def lookup(map_data, value_ranges):
         if not found:
             output.append((value_min, num))
     return output
+
+
+def main():
+    _input_file = 'input'
+    expected = {
+        'input': (322500873, 108956227),
+        'example': (35, 46),
+    }[_input_file]
+
+    run(__file__, solve, _input_file, expected[0], p1=True)
+    run(__file__, solve, _input_file, expected[1], p1=False)
 
 
 if __name__ == '__main__':

@@ -1,21 +1,15 @@
 from aocl import *
 import numpy as np
-import time
 
 
-# cycles = 0
-cycles = 1000000000
-
-
-def main():
-    lines = read_lines('input')
+def solve(input_file, cycles):
+    lines = read_lines(input_file)
     rows, cols = len(lines), len(lines[0])
 
     platform = np.zeros((rows, cols), dtype=np.byte)
     for r, line in enumerate(lines):
         platform[r] = [(0, 1, 2)[(c != '.') + (c == 'O')] for c in line]
 
-    start = time.time()
     if cycles == 0:
         roll_north(platform)
     else:
@@ -31,27 +25,22 @@ def main():
             if platform_hash in seen:
                 seen_on = seen[platform_hash]
                 repeat_interval = cycle - seen_on
-                print('\nrepeating with cycle', repeat_interval, '- previously seen in cycle', seen_on)
+                # print('\nrepeating with cycle', repeat_interval, '- previously seen in cycle', seen_on)
                 remaining = (cycles - cycle)
                 cycle = cycles - (remaining % repeat_interval) + 0
-                print('jumped to cycle', cycle)
+                # print('jumped to cycle', cycle)
                 seen = dict()
             else:
                 seen[platform_hash] = cycle
-                print('.', end='')
-                if cycle > 0 and cycle % 50 == 0:
-                    print()
+                # print('.', end='')
+                # if cycle > 0 and cycle % 50 == 0:
+                #     print()
 
     # print()
     # display(platform)
-    print('time taken:', time.time() - start)
 
     load = calc_load(platform)
-    print('load:', load)
-    if cycles == 0:
-        assert load == 111979
-    else:
-        assert load == 102055
+    return load
 
 
 def roll_north(platform):
@@ -92,6 +81,16 @@ def calc_load(platform):
         load += row_rolling_count * row_load_factor
     return load
 
+
+def main():
+    _input_file = 'input'
+    expected = {
+        'input': (111979, 102055),
+        'example': (None, None),
+    }[_input_file]
+
+    run(__file__, solve, _input_file, expected[0], cycles=0)
+    run(__file__, solve, _input_file, expected[1], cycles=1000000000)
 
 if __name__ == '__main__':
     main()

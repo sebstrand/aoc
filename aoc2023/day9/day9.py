@@ -2,8 +2,8 @@ from aocl import *
 import numpy as np
 
 
-def main():
-    lines = read_lines('input')
+def solve(input_file, p1=True):
+    lines = read_lines(input_file)
 
     history = []
     for line in lines:
@@ -11,13 +11,10 @@ def main():
 
     extrapolated = [extrapolate(h) for h in history]
 
-    last_sum = sum(x[-1] for x in extrapolated)
-    print('last sum:', last_sum)
-    assert last_sum == 1884768153
-
-    first_sum = sum(x[0] for x in extrapolated)
-    print('first sum:', first_sum)
-    assert first_sum == 1031
+    if p1:
+        return sum(x[-1] for x in extrapolated)
+    else:
+        return sum(x[0] for x in extrapolated)
 
 
 def extrapolate(h):
@@ -37,6 +34,17 @@ def with_diffs(h):
             break
         diffs.append(diff)
     return diffs
+
+
+def main():
+    _input_file = 'input'
+    expected = {
+        'input': (1884768153, 1031),
+        'example': (114, 2),
+    }[_input_file]
+
+    run(__file__, solve, _input_file, expected[0], p1=True)
+    run(__file__, solve, _input_file, expected[1], p1=False)
 
 
 if __name__ == '__main__':

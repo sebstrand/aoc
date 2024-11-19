@@ -1,3 +1,4 @@
+import re
 from aocl import *
 
 
@@ -5,8 +6,8 @@ number_re = re.compile(r'\D*(\d+)')
 symbol_re = re.compile(r'[.\d]*([^0-9.])')
 
 
-def main():
-    lines = read_lines('input')
+def solve(input_file, p1=True):
+    lines = read_lines(input_file)
 
     number_locations = []
     symbol_locations = []
@@ -27,8 +28,6 @@ def main():
                 break
             pos = m.end()
             symbol_locations.append((m.group(1), i, m.start(1)))
-    print(number_locations)
-    print(symbol_locations)
 
     part_numbers = []
     for number, n_line, n_col_start, n_col_end in number_locations:
@@ -36,9 +35,8 @@ def main():
             if n_line - 1 <= s_line <= n_line + 1 and n_col_start - 1 <= s_col <= n_col_end + 1:
                 part_numbers.append(int(number))
                 break
-    part_number_sum = sum(part_numbers)
-    print('part number sum:', part_number_sum)
-    assert part_number_sum == 536576
+    if p1:
+        return sum(part_numbers)
 
     gear_ratios = []
     for symbol, s_line, s_col in symbol_locations:
@@ -50,10 +48,18 @@ def main():
             if len(adjacent_numbers) == 2:
                 gear_ratios.append(int(adjacent_numbers[0]) * int(adjacent_numbers[1]))
 
-    print('gear ratios:', gear_ratios)
-    gear_ratio_sum = sum(gear_ratios)
-    print('gear ratio sum:', gear_ratio_sum)
-    assert gear_ratio_sum == 75741499
+    return sum(gear_ratios)
+
+
+def main():
+    _input_file = 'input'
+    expected = {
+        'input': (536576, 75741499),
+        'example': (4361, 467835),
+    }[_input_file]
+
+    run(__file__, solve, _input_file, expected[0], p1=True)
+    run(__file__, solve, _input_file, expected[1], p1=False)
 
 
 if __name__ == '__main__':
