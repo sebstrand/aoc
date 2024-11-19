@@ -6,8 +6,8 @@ green_cubes = 13
 blue_cubes = 14
 
 
-def main():
-    lines = read_lines('input')
+def solve(input_file, p1=True):
+    lines = read_lines(input_file)
 
     valid_game_id_sum = 0
     power_sum = 0
@@ -26,14 +26,24 @@ def main():
         if is_valid:
             valid_game_id_sum += line.number
         power_sum += max_seen['red'] * max_seen['green'] * max_seen['blue']
-        print('game', line.number, 'required cubes:', max_seen, 'valid', is_valid)
+        # print('game', line.number, 'required cubes:', max_seen, 'valid', is_valid)
 
-    print('valid game ID sum:', valid_game_id_sum)
-    assert valid_game_id_sum == 2879
-    print('power sum:', power_sum)
-    assert power_sum == 65122
+    if p1:
+        return valid_game_id_sum
+    else:
+        return power_sum
+
+
+def main():
+    _input_file = 'input'
+    expected = {
+        'input': (2879, 65122),
+        'example': (8, 2286),
+    }[_input_file]
+
+    run(__file__, solve, _input_file, expected[0], p1=True)
+    run(__file__, solve, _input_file, expected[1], p1=False)
 
 
 if __name__ == '__main__':
     main()
-

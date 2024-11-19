@@ -3,11 +3,8 @@ from collections import defaultdict
 import numpy as np
 
 
-p2 = True
-
-
-def main():
-    lines = read_lines('input')
+def solve(input_file, p1=True):
+    lines = read_lines(input_file)
 
     directions = list(lines.pop(0))
     nodes = {}
@@ -15,12 +12,12 @@ def main():
         node, l, r = visit(splits(line, sep=(' = ', ', ')))
         nodes[node] = (l[1:], r[:-1])
 
-    if p2:
-        locations = [loc for loc in nodes.keys() if loc.endswith('A')]
-    else:
+    if p1:
         locations = [loc for loc in nodes.keys() if loc == 'AAA']
+    else:
+        locations = [loc for loc in nodes.keys() if loc.endswith('A')]
 
-    print('start', len(locations), locations)
+    # print('starts', len(locations), locations)
     steps = defaultdict(list)
     for location in locations:
         ends = set()
@@ -30,22 +27,26 @@ def main():
             step += 1
             direction = 'LR'.index(directions[mod_step])
             location = nodes[location][direction]
-            if (p2 and location[-1] == 'Z') or (not p2 and location == 'ZZZ'):
+            if (not p1 and location[-1] == 'Z') or (p1 and location == 'ZZZ'):
                 end = (location, mod_step)
-                if end in ends:
-                    break
-                else:
+                if not end in ends:
                     ends.add(end)
                     steps[location].append(step)
+                break
 
-    print('steps', steps, list(visit(steps.values())))
-    steps_required = np.lcm.reduce(list(visit(steps.values())))
-    print('steps required:', steps_required)
+    return np.lcm.reduce(list(visit(steps.values())))
 
-    if p2:
-        assert steps_required == 20685524831999
+
+def main():
+    real_input = True
+
+    if real_input:
+        run(__file__, solve, 'input', 17621, p1=True)
+        run(__file__, solve, 'input', 20685524831999, p1=False)
     else:
-        assert steps_required == 17621
+        run(__file__, solve, 'example', 2, p1=True)
+        run(__file__, solve, 'example2', 6, p1=True)
+        run(__file__, solve, 'examplep2', 6, p1=False)
 
 
 if __name__ == '__main__':

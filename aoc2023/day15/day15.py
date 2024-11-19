@@ -2,9 +2,8 @@ from aocl import *
 from collections import defaultdict
 
 
-def main():
-    lines = read_lines('input')
-
+def solve(input_file, p1=True):
+    lines = read_lines(input_file)
     steps = splits(lines[0], sep=(',',))
 
     boxes = defaultdict(Box)
@@ -22,19 +21,16 @@ def main():
         else:
             boxes[box].remove(label)
 
+    if p1:
+        return sum(HASH(step) for step in steps)
+
     total_focusing_power = 0
     for box in boxes:
         box_lens_powers = [(box+1) * pwr for pwr in boxes[box].lens_powers()]
-        print(f'box: {box:3}', boxes[box].lenses, 'lens focusing powers', box_lens_powers)
+        # print(f'box: {box:3}', boxes[box].lenses, 'lens focusing powers', box_lens_powers)
         total_focusing_power += sum(box_lens_powers)
 
-    print()
-    hash_sum = sum(HASH(step) for step in steps)
-    assert hash_sum == 509167
-    print('step HASH sum:', hash_sum)
-
-    print('total focusing power:', total_focusing_power)
-    assert total_focusing_power == 259333
+    return total_focusing_power
 
 
 class Box:
@@ -58,7 +54,6 @@ class Box:
         return [(i+1) * lens[1] for i, lens in enumerate(self.lenses)]
 
 
-
 def HASH(s):
     h = 0
     for c in s:
@@ -66,6 +61,17 @@ def HASH(s):
         h *= 17
         h = h % 256
     return h
+
+
+def main():
+    _input_file = 'input'
+    expected = {
+        'input': (509167, 259333),
+        'example': (None, None),
+    }[_input_file]
+
+    run(__file__, solve, _input_file, expected[0], p1=True)
+    run(__file__, solve, _input_file, expected[1], p1=False)
 
 
 if __name__ == '__main__':

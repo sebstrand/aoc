@@ -4,10 +4,11 @@ from aocl import *
 
 
 valid_pipes = 'S|LJ7F-'
+generate_images = False
 
 
-def main():
-    lines = read_lines('input')
+def solve(input_file, p1=True):
+    lines = read_lines(input_file)
 
     grid = np.empty((len(lines), len(lines[0])), dtype=[('pipe', 'U1'), ('dist', 'i4')])
     print('grid size:', grid.shape)
@@ -19,7 +20,7 @@ def main():
             if pipe == 'S':
                 start = (r, c)
 
-    print('start:', start)
+    # print('start:', start)
     start_directions = get_start_directions(grid, start)
     assert len(start_directions) == 2
 
@@ -43,22 +44,23 @@ def main():
 
     loop_length = distance
     max_dist = math.ceil(loop_length / 2)
-    print('loop length:', loop_length)
-    print('max dist:', max_dist)
-    print('distances:\n', grid['dist'])
-    assert max_dist == 6867
+    # print('loop length:', loop_length)
+    # print('max dist:', max_dist)
+    # print('distances:\n', grid['dist'])
+    if p1:
+        return max_dist
 
     enclosed = find_enclosed(grid)
-    print('enclosed:\n', enclosed)
-    print()
+    # print('enclosed:\n', enclosed)
+    # print()
 
-    visualize(grid, 'grid.png', type='all')
-    visualize(grid, 'grid_loop.png', type='loop')
-    visualize(enclosed, 'grid_enclosed.png', type='enclosed')
+    if generate_images:
+        visualize(grid, 'grid.png', type='all')
+        visualize(grid, 'grid_loop.png', type='loop')
+        visualize(enclosed, 'grid_enclosed.png', type='enclosed')
 
     num_enclosed = (enclosed > 0).sum()
-    print('num enclosed:', num_enclosed)
-    assert num_enclosed == 595
+    return num_enclosed
 
 
 def get_start_directions(grid, start_pos):
@@ -72,6 +74,8 @@ def get_start_directions(grid, start_pos):
 
 def get_directions(grid, pos):
     pipe = grid['pipe'][*pos]
+    if pipe == '.':
+        return []
     neighbors = neighbors_2d(grid, pos)
 
     if pipe == '|':
@@ -187,6 +191,19 @@ def visualize(grid, filename, type='all'):
             grid = grid.copy()
             grid['pipe'][grid['dist'] == 0] = '.'
         visualize_grid(grid['pipe'], filename, tiles, bg_color=(0, 0, 0))
+
+
+def main():
+    real_input = True
+
+    if real_input:
+        run(__file__, solve, 'input', 6867, p1=True)
+        run(__file__, solve, 'input', 595, p1=False)
+    else:
+        run(__file__, solve, 'example', 4, p1=True)
+        run(__file__, solve, 'examplep2-1', 4, p1=False)
+        run(__file__, solve, 'examplep2-2', 8, p1=False)
+        run(__file__, solve, 'examplep2-3', 10, p1=False)
 
 
 if __name__ == '__main__':

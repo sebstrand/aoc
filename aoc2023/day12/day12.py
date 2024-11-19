@@ -5,11 +5,11 @@ from concurrent.futures import ProcessPoolExecutor, as_completed
 from aocl import *
 
 
-expand = 3
+debug = False
 
 
-def main():
-    records = [splits(s) for s in read_lines('input')]
+def solve(input_file, expand, record_range=None):
+    records = [splits(s) for s in read_lines(input_file)]
 
     for i, (springs, groups) in enumerate(records):
         springs = springs.replace('.', '_').replace('?', '.')
@@ -23,9 +23,10 @@ def main():
     start = time.time()
     total_arrangements = 0
 
-    # records = records[303:304]
-    unfinished = (303, 625, 925)
-    # unfinished = list(range(len(records)))
+    if record_range is not None:
+        records = records[record_range[0]:record_range[1]]
+    # unfinished = (303, 625, 925)
+    unfinished = list(range(len(records)))
     total_finished = len(records) - len(unfinished)
 
     with ProcessPoolExecutor() as executor:
@@ -44,25 +45,24 @@ def main():
                 print('%r generated an exception: %s' % (idx, exc))
             else:
                 total_arrangements += num_arrangements
-                springs, groups = records[idx]
-                print(f'r#{idx:04}:', springs)
-                print('  groups', groups)
-                print('  num arrangements:', num_arrangements, 'total now', total_arrangements)
-                print('  progress:', f'{math.floor(total_finished / len(records) * 100)}%',
-                      f'({len(records)-total_finished} remaining)')
+                if debug:
+                    springs, groups = records[idx]
+                    print(f'r#{idx:04}:', springs)
+                    print('  groups', groups)
+                    print('  num arrangements:', num_arrangements, 'total now', total_arrangements)
+                    print('  progress:', f'{math.floor(total_finished / len(records) * 100)}%',
+                          f'({len(records)-total_finished} remaining)')
 
-    print()
-    print('total possible arrangements:', total_arrangements)
-    print('time:', time.time() - start)
-    if expand:
-        print('TODO: assert full result')
-        assert total_arrangements == 2113581  # first 200 with expand 3
-    else:
-        assert total_arrangements == 7007
+    if debug:
+        print()
+        print('total possible arrangements:', total_arrangements)
+        print('time:', time.time() - start)
+    return total_arrangements
 
 
 def begin_arrange(idx, springs, groups):
-    print(f'start r#{idx:04}')
+    if debug:
+        print(f'start r#{idx:04}')
     arrangement = [-1] * (len(groups)*2 + 1)
     return arrange(arrangement, springs, groups)
 
@@ -177,6 +177,13 @@ def show_arrangement(arrangement, width=0):
         return start + '|' + end
     else:
         return start + end
+
+
+def main():
+    _input_file = 'input'
+
+    run(__file__, solve, _input_file, 7007, expand=0)
+    run(__file__, solve, _input_file, 2113581, expand=3, record_range=(0, 201))
 
 
 if __name__ == '__main__':
