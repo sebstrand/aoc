@@ -183,33 +183,8 @@ def manhattan(pos1, pos2):
     return abs(pos1[0] - pos2[0]) + abs(pos1[1] - pos2[1])
 
 
-class PriorityQueue:
-    def __init__(self):
-        self.entries = {}
-        self.pq = []
-
-    def __len__(self):
-        return len(self.entries)
-
-    def add(self, priority, item):
-        if item in self.entries:
-            entry = self.entries.pop(item)
-            entry[-1] = ()
-        entry = [priority, item]
-        self.entries[item] = entry
-        hq.heappush(self.pq, entry)
-
-    def pop(self):
-        while self.pq:
-            priority, item = hq.heappop(self.pq)
-            if item:
-                del self.entries[item]
-                return item
-        raise KeyError('priority queue is empty')
-
-
 def main():
-    _input_file = 'example'
+    _input_file = 'input'
     steps = {
         'input': (64, 26501365),
         'example': (6, 10),
@@ -219,8 +194,8 @@ def main():
         'example': (16, 50),
     }[_input_file]
 
-    # run(__file__, solve, _input_file, expected[0], p1=True, steps=steps[0])
-    run(__file__, solve, _input_file, expected[1], p1=False, steps=steps[1])
+    run(__file__, solve, _input_file, expected[0], p1=True, steps=steps[0])
+    # run(__file__, solve, _input_file, expected[1], p1=False, steps=steps[1])
 
 
 if __name__ == '__main__':

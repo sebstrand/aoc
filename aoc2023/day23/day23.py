@@ -1,8 +1,6 @@
-import sys
 import numpy as np
-import heapq as hq
 from aocl import *
-from collections import defaultdict, deque
+from collections import deque
 
 
 def solve(input_file, p1=True):
@@ -13,14 +11,15 @@ def solve(input_file, p1=True):
     for r, line in enumerate(lines):
         trails[r] = [char_to_num(c, p1) for c in line]
 
-    print(np.count_nonzero(trails!=1))
-    return
+    # print(np.count_nonzero(trails!=1))
+
     start_pos = (0, 1)
     end_pos = (rows-1, cols-2)
     if p1:
         return a_star(trails, start_pos, end_pos)
     else:
         return bfs(trails, start_pos, end_pos)
+
 
 def bfs(trails, start_pos, end_pos):
     p = Path(start_pos)
@@ -38,14 +37,16 @@ def bfs(trails, start_pos, end_pos):
                 path_len = len(path.positions)
                 if path_len > max_path:
                     max_path = path_len
-                    print('path len', len(new_path.positions), 'q', len(q))
+                    # print('path len', len(new_path.positions), 'q', len(q))
                 if n_pos == end_pos:
-                    print('valid path found')
+                    # print('valid path found')
                     valid_paths.append(new_path)
                 elif n_pos[0] < rows//2 - 1 and new_path.positions.issuperset(h_line):
-                    print('no paths to goal possible, discarding')
+                    # print('no paths to goal possible, discarding')
+                    pass
                 elif n_pos[1] < cols//2 - 1 and new_path.positions.issuperset(v_line):
-                    print('no paths to goal possible, discarding')
+                    # print('no paths to goal possible, discarding')
+                    pass
                 else:
                     q.append(new_path)
     return max(len(p) - 1 for p in valid_paths)
@@ -152,31 +153,6 @@ def is_on_path(came_from, current_pos, test_pos):
     return False
 
 
-class PriorityQueue:
-    def __init__(self):
-        self.entries = {}
-        self.pq = []
-
-    def __len__(self):
-        return len(self.entries)
-
-    def add(self, priority, item):
-        if item in self.entries:
-            entry = self.entries.pop(item)
-            entry[-1] = ()
-        entry = [priority, item]
-        self.entries[item] = entry
-        hq.heappush(self.pq, entry)
-
-    def pop(self):
-        while self.pq:
-            priority, item = hq.heappop(self.pq)
-            if item:
-                del self.entries[item]
-                return item
-        raise KeyError('priority queue is empty')
-
-
 def estimate_distance(pos1, pos2):
     if pos1 == pos2:
         return 0
@@ -191,8 +167,8 @@ def main():
         'example': (94, 154),
     }[_input_file]
 
-    # run(__file__, solve, _input_file, expected[0], p1=True)
-    run(__file__, solve, _input_file, expected[1], p1=False)
+    run(__file__, solve, _input_file, expected[0], p1=True)
+    # run(__file__, solve, _input_file, expected[1], p1=False)
 
 
 if __name__ == '__main__':
