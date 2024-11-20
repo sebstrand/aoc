@@ -73,7 +73,7 @@ def read_lines(filename, strip='a', skip_empty=True):
     """Read lines from a file.
 
     Keyword arguments:
-    strip -- what whitespace to strip; 'l' for left, 'r', for right, True for both or False/None for none
+    strip -- what whitespace to strip; 'l' for left, 'r', for right, 'a'/True for both or False/None for none
     skip_empty -- if true empty lines (after strip applied) are not included in the output
     """
     with open(filename, 'rt') as f:
