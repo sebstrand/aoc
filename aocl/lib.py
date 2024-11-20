@@ -6,7 +6,7 @@ import time
 import tomllib
 import traceback
 
-from PIL import Image
+from PIL import Image, ImageShow
 from collections import namedtuple
 from functools import reduce
 from heapq import heappush, heappop
@@ -174,7 +174,7 @@ def neighbors_2d(grid, pos, named=False, valid_only=False):
         return n
 
 
-def visualize_grid(grid, filename, tile_map, bg_color=(0, 0, 0, 0)):
+def visualize_grid(grid, filename, tile_map, bg_color=(0, 0, 0, 0), show=False):
     rows, cols = len(grid), len(grid[0])
     first_tile = tuple(tile_map.values())[0]
     tile_height, tile_width = len(first_tile), len(first_tile[0])
@@ -199,7 +199,10 @@ def visualize_grid(grid, filename, tile_map, bg_color=(0, 0, 0, 0)):
                 tile = tile_map[grid_data]
                 image.paste(tile, (c*tile_width, r*tile_height))
 
-    image.save(filename)
+    if show:
+        ImageShow.show(image, filename)
+    else:
+        image.save(filename)
 
 
 def contains_sublist(lst, sublist):
