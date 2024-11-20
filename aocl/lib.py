@@ -90,7 +90,15 @@ def read_lines(filename, strip='a', skip_empty=True):
         return [stripper(line) for line in f.readlines() if not skip_empty or stripper(line) != '']
 
 
-def labeline(line, numbered=True):
+def labeline(line: str, numbered=True):
+    """Parses a line that consists of a label with content into a named tuple.
+
+    >>> labeline( "Item 42: some content" )
+    labeline(label='Item', number=42, content='some content')
+
+    >>> labeline( "Label: some content", numbered=False )
+    labeline(label='Label', number=None, content='some content')
+    """
     if numbered:
         m = _labeline_n_re.match(line)
         if m:
@@ -110,10 +118,29 @@ def labeline(line, numbered=True):
 
 
 def ints(s, sep=(r'[^\d-]+',)):
+    """Convenience function which uses splits to find all integers in a string. By default accepts any separator that
+    isn't a digit or a dash.
+
+    >>> ints( '1,-5  6:7')
+    [1, -5, 6, 7]
+    """
     return splits(s, sep, int)
 
 
-def splits(s, sep=(r' ',), f=None):
+def splits(s: str, sep=(r' ',), f=None):
+    """Uses sep to split s into parts using the separator(s) in sep. If multiple separators are specified then each
+    part is split using the second separator, and then each of those parts using the third separator, and so on. A
+    transform function f can be specified which is used to transform the final parts.
+
+    >>> splits('a b c')
+    ['a', 'b', 'c']
+
+    >>> splits('1,2,3', sep=(',',), f=int)
+    [1, 2, 3]
+
+    >>> splits('a:1,  b:2,    c:3', sep=(r', *',':'))
+    [['a', '1'], ['b', '2'], ['c', '3']]
+    """
     s = s.strip()
     single_sep = sep[0]
     if single_sep == ' ':
@@ -132,11 +159,27 @@ def visit(lst):
 
 
 def factors(n):
+    """Finds the factors of a number.
+
+    >>> factors(32)
+    {32, 1, 2, 4, 8, 16}
+
+    >>> factors(7)
+    {1, 7}
+    """
     return set(reduce(list.__add__,
                       ([i, n//i] for i in range(1, int(n**0.5) + 1) if n % i == 0)))
 
 
 def prime_factors(n):
+    """Finds the prime factors of a number.
+
+    >>> prime_factors(32)
+    [2, 2, 2, 2, 2]
+
+    >>> prime_factors(33)
+    [3, 11]
+    """
     p_factors = []
     divisor = 2
 
@@ -150,6 +193,18 @@ def prime_factors(n):
 
 
 def neighbors_2d(grid, pos, named=False, valid_only=False):
+    """Returns neighbor positions and values in a grid. When not using named position they are returned as a list using
+    the order nswe, named positions are a dictionary with the keys nswe.
+
+    >>> neighbors_2d([[1,2,3],[4,5,6],[7,8,9]], (1,1))
+    [((0, 1), 2), ((2, 1), 8), ((1, 0), 4), ((1, 2), 6)]
+
+    >>> neighbors_2d([[1,2,3],[4,5,6],[7,8,9]], (0,0), valid_only=True)
+    [((1, 0), 4), ((0, 1), 2)]
+
+    >>> neighbors_2d([[1,2,3],[4,5,6],[7,8,9]], (1,1), named=True)
+    {'n': ((0, 1), 2), 's': ((2, 1), 8), 'w': ((1, 0), 4), 'e': ((1, 2), 6)}
+    """
     r, c = pos
 
     if named:
@@ -206,6 +261,17 @@ def visualize_grid(grid, filename, tile_map, bg_color=(0, 0, 0, 0), show=False):
 
 
 def contains_sublist(lst, sublist):
+    """Checks if sublist is contained within lst.
+
+    >>> contains_sublist(['a', 'b'], [])
+    True
+    >>> contains_sublist(['a', 'b'], ['a'])
+    True
+    >>> contains_sublist(['a', 'b'], ['a', 'b'])
+    True
+    >>> contains_sublist(['a', 'b'], ['a', 'b', 'c'])
+    False
+    """
     if len(sublist) == 0:
         return True
     elif len(lst) == len(sublist):
@@ -220,6 +286,11 @@ def contains_sublist(lst, sublist):
 
 
 def polygon_area(coordinates):
+    """Calculate the area of a polygon defined as a list of coordinates.
+
+    >>> polygon_area([(0,0), (2,0), (0,2)])
+    np.float64(2.0)
+    """
     x = [x for x, _ in coordinates]
     y = [y for _, y in coordinates]
     return 0.5 * np.abs(
