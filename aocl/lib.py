@@ -202,8 +202,8 @@ def neighbors_2d(grid, pos, named=False, valid_only=False):
     >>> neighbors_2d([[1,2,3],[4,5,6],[7,8,9]], (0,0), valid_only=True)
     [((1, 0), 4), ((0, 1), 2)]
 
-    >>> neighbors_2d([[1,2,3],[4,5,6],[7,8,9]], (1,1), named=True)
-    {'n': ((0, 1), 2), 's': ((2, 1), 8), 'w': ((1, 0), 4), 'e': ((1, 2), 6)}
+    >>> neighbors_2d([[1,2,3],[4,5,6],[7,8,9]], (0,0), named=True, valid_only=True)
+    {'s': ((1, 0), 4), 'e': ((0, 1), 2)}
     """
     r, c = pos
 
@@ -224,7 +224,10 @@ def neighbors_2d(grid, pos, named=False, valid_only=False):
         n[n3] = ((r, c+1), grid[r][c+1])
 
     if valid_only:
-        return [x for x in n if x]
+        if named:
+            return {k: v for k, v in n.items() if v}
+        else:
+            return [x for x in n if x]
     else:
         return n
 
