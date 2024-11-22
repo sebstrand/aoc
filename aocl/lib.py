@@ -31,14 +31,14 @@ def run(puzzle, f, input_file, expected_answer, *args, **kwargs):
     try:
         answer = f(input_file, *args, **kwargs)
         if answer == expected_answer:
-            print('Answer:', answer)
+            print('Answer:', _format_answer(answer))
         else:
             print('==== WRONG ANSWER ====')
-            print('  Expected:', expected_answer)
+            print('  Expected:', _format_answer(expected_answer))
             if answer is None or expected_answer is None:
-                print('    Actual:', answer)
+                print('    Actual:', _format_answer(answer))
             else:
-                print('    Actual:', answer, ('(too big)', '(too small)')[answer < expected_answer])
+                print('    Actual:', _format_answer(answer), ('(too big)', '(too small)')[answer < expected_answer])
     except KeyboardInterrupt:
         print('Canceled by user')
     except Exception as e:
@@ -47,6 +47,13 @@ def run(puzzle, f, input_file, expected_answer, *args, **kwargs):
 
     time_taken = time.time() - start
     print('Time taken:', f'{time_taken:.04}s')
+
+
+def _format_answer(answer):
+    output = f'{answer}'
+    if '\n' in output:
+        return '\n' + output
+    return output
 
 
 def _fetch_puzzle_input(puzzle_path):

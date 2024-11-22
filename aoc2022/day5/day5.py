@@ -2,12 +2,11 @@ from aocl import *
 from collections import defaultdict, deque
 
 
-def main():
-    lines = read_lines('input', skip_empty=False, strip='r')
+def solve(input_file, multi_move=False):
+    lines = read_lines(input_file, skip_empty=False, strip='r')
 
     stacks = defaultdict(deque)
     moves = []
-    multi_move = True
 
     for line in lines:
         if line.startswith('move'):
@@ -29,12 +28,18 @@ def main():
                 stacks[to_stack].appendleft(crate_id)
 
     n_stacks = len(stacks)
-    top_crates = ''.join([stacks[i][0] for i in range(1, n_stacks+1)])
-    print('top crates:', top_crates)
-    if multi_move:
-        assert top_crates == 'LVMRWSSPZ'
-    else:
-        assert top_crates == 'JCMHLVGMG'
+    return ''.join([stacks[i][0] for i in range(1, n_stacks+1)])
+
+
+def main():
+    _input_file = 'input'
+    expected = {
+        'input': ('JCMHLVGMG', 'LVMRWSSPZ'),
+        'example': ('CMZ', 'MCD'),
+    }[_input_file]
+
+    run(__file__, solve, _input_file, expected[0], multi_move=False)
+    run(__file__, solve, _input_file, expected[1], multi_move=True)
 
 
 if __name__ == '__main__':

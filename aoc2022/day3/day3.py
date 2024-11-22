@@ -6,8 +6,8 @@ priorities_l = [v+1 for v in range(0, len(string.ascii_lowercase)+1)]
 priorities_u = [v+27 for v in range(0, len(string.ascii_lowercase)+1)]
 
 
-def main():
-    lines = read_lines('input')
+def solve(input_file, p1=True):
+    lines = read_lines(input_file)
 
     p_sum = 0
     badge_p_sum = 0
@@ -25,13 +25,12 @@ def main():
 
         if i % 3 == 2:
             badge = badge_set.pop()
-            print('badge:', badge)
             badge_p_sum += get_priority(badge)
 
-    print('priority sum:', p_sum)
-    assert p_sum == 7848
-    print('badge priority sum:', badge_p_sum)
-    assert p_sum == 2616
+    if p1:
+        return p_sum
+    else:
+        return badge_p_sum
 
 
 def get_priority(s):
@@ -40,6 +39,17 @@ def get_priority(s):
         return priorities_u[o - ord('A')]
     else:
         return priorities_l[o - ord('a')]
+
+
+def main():
+    _input_file = 'input'
+    expected = {
+        'input': (7848, 2616),
+        'example': (157, 70),
+    }[_input_file]
+
+    run(__file__, solve, _input_file, expected[0], p1=True)
+    run(__file__, solve, _input_file, expected[1], p1=False)
 
 
 if __name__ == '__main__':

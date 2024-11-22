@@ -1,13 +1,11 @@
 import math
 
 from aocl import *
-from collections import Counter
 
 
-def main():
-    lines = read_lines('input')
+def solve(input_file, p1=True):
+    lines = read_lines(input_file)
 
-    sizes = Counter()
     root = Node('/')
     path = [root]
     for line in lines:
@@ -31,8 +29,8 @@ def main():
             path[-1].add_child(Node(filename, is_dir=False, size=size))
             # print('size', int(size), 'for', filename, 'in', path)
 
-    print('\nfs:')
-    print_tree(root)
+    # print('\nfs:')
+    # print_tree(root)
 
     collected_dirs = []
 
@@ -41,24 +39,22 @@ def main():
             collected_dirs.append(node)
 
     traverse_tree(root, lambda node, level: collect_dirs_between( node, level, 0, 100000))
-    total_size_of_dirs_below = sum(d.size for d in collected_dirs)
-    print('size of dirs below:', total_size_of_dirs_below)
-    assert total_size_of_dirs_below == 1908462
+    if p1:
+        return sum(d.size for d in collected_dirs)
 
     collected_dirs = []
     disk_space = 70000000
     required_free_space = 30000000
-    print('root size:', root.size)
+    # print('root size:', root.size)
     available_space = disk_space - root.size
     space_to_free = required_free_space - available_space
-    print('space to free:', space_to_free)
+    # print('space to free:', space_to_free)
     traverse_tree(root, lambda node, level: collect_dirs_between( node, level, space_to_free, math.inf))
-    print('deletion candidate dirs:', collected_dirs)
+    # print('deletion candidate dirs:', collected_dirs)
     collected_dirs.sort(key=lambda node: node.size)
     dir_to_delete = collected_dirs[0]
-    print('dir to delete:', dir_to_delete)
-    assert dir_to_delete.name == 'zmljzwt'
-    assert dir_to_delete.size == 3979145
+    # print('dir to delete:', dir_to_delete)
+    return dir_to_delete.size
 
 
 class Node:
@@ -103,7 +99,18 @@ def print_tree(node):
 def node_printer(node, level=0):
     print(' ' * level, end='')
     type_name = ('file', 'dir')[node.is_dir]
-    print(node.name, f'(type_name, size={node.size})')
+    print(node.name, f'{type_name}, size={node.size})')
+
+
+def main():
+    _input_file = 'input'
+    expected = {
+        'input': (1908462, 3979145),
+        'example': (95437, 24933642),
+    }[_input_file]
+
+    run(__file__, solve, _input_file, expected[0], p1=True)
+    run(__file__, solve, _input_file, expected[1], p1=False)
 
 
 if __name__ == '__main__':

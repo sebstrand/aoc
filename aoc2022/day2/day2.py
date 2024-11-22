@@ -12,9 +12,16 @@ move_value = {
 }
 
 
-def mainp1():
-    lines = read_lines('input')
+def solve(input_file, p1=True):
+    lines = read_lines(input_file)
 
+    if p1:
+        return solve_p1(lines)
+    else:
+        return solve_p2(lines)
+
+
+def solve_p1(lines):
     outcomes = {
         'AX': None,
         'AY': True,
@@ -39,14 +46,10 @@ def mainp1():
             score += 3
         elif outcome:
             score += 6
-
-    print('score p1:', score)
-    assert score == 13526
+    return score
 
 
-def mainp2():
-    lines = read_lines('input')
-
+def solve_p2(lines):
     plays = {
         'AX': 'C',
         'AY': 'A',
@@ -71,11 +74,19 @@ def mainp2():
             score += 3
         elif desired_outcome == 'Z':
             score += 6
+    return score
 
-    print('score p2:', score)
-    assert score == 14204
+
+def main():
+    _input_file = 'input'
+    expected = {
+        'input': (13526, 14204),
+        'example': (15, 12),
+    }[_input_file]
+
+    run(__file__, solve, _input_file, expected[0], p1=True)
+    run(__file__, solve, _input_file, expected[1], p1=False)
 
 
 if __name__ == '__main__':
-    mainp1()
-    mainp2()
+    main()
