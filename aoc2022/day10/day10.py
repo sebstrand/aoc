@@ -2,8 +2,8 @@ from aocl import *
 from collections import defaultdict, deque
 
 
-def main():
-    lines = read_lines('input')
+def solve(input_file, p1=True):
+    lines = read_lines(input_file)
 
     instructions = deque()
     for line in lines:
@@ -12,39 +12,26 @@ def main():
         args = [int(x) for x in parts[1:]]
         instructions.append((command, args))
 
-    display = [
-        ['.'] * 40,
-        ['.'] * 40,
-        ['.'] * 40,
-        ['.'] * 40,
-        ['.'] * 40,
-        ['.'] * 40,
-    ]
+    display = [ ['.'] * 40 for i in range(6) ]
 
     cpu = Cpu(instructions, display, trace=False)
     signal_strength_sum = 0
     while True:
         registers = cpu.tick()
         if registers is None:
-            show_display(display)
             break
         elif cpu.cycle >= 20 and (cpu.cycle - 20) % 40 == 0:
             signal_strength = cpu.cycle * registers['x']
-            print('cycle', cpu.cycle)
-            print('  signal strength:', signal_strength, f'(reg x={registers["x"]})')
             signal_strength_sum += signal_strength
 
-    print()
-    print('signal strength sum:', signal_strength_sum)
-    assert signal_strength_sum == 13140
-
-    # display should read EHPZPJGL
+    if p1:
+        return signal_strength_sum
+    else:
+        return show_display(display)
 
 
 def show_display(display):
-    print()
-    for row in display:
-        print(''.join(row))
+    return '\n'.join([''.join(row) for row in display])
 
 
 class Cpu:
@@ -60,7 +47,8 @@ class Cpu:
         self.registers = registers
         self.cycle = 0
         self.in_progress = None
-        print('Cpu initialized with', len(instructions), 'instructions', instructions)
+        if self.trace:
+            print('Cpu initialized with', len(instructions), 'instructions', instructions)
 
     def tick(self):
         self.cycle += 1
@@ -126,6 +114,37 @@ class Cpu:
             assert len(args) == 1
             register = command[3:4]
             self.registers[register] += args[0]
+
+
+def main():
+    _input_file = 'input'
+    expected = {
+        'input': (
+            12520,
+            '\n'.join([
+                '####.#..#.###..####.###....##..##..#....',
+                '#....#..#.#..#....#.#..#....#.#..#.#....',
+                '###..####.#..#...#..#..#....#.#....#....',
+                '#....#..#.###...#...###.....#.#.##.#....',
+                '#....#..#.#....#....#....#..#.#..#.#....',
+                '####.#..#.#....####.#.....##...###.####.',
+            ])
+        ),
+        'example': (
+            13140,
+            '\n'.join([
+                '##..##..##..##..##..##..##..##..##..##..',
+                '###...###...###...###...###...###...###.',
+                '####....####....####....####....####....',
+                '#####.....#####.....#####.....#####.....',
+                '######......######......######......####',
+                '#######.......#######.......#######.....',
+            ])
+        ),
+    }[_input_file]
+
+    run(__file__, solve, _input_file, expected[0], p1=True)
+    run(__file__, solve, _input_file, expected[1], p1=False)
 
 
 if __name__ == '__main__':

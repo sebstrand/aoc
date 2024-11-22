@@ -3,11 +3,10 @@ from collections import namedtuple
 
 
 Pos = namedtuple('pos', ['x', 'y'])
-rope_length = 10
 
 
-def main():
-    lines = read_lines('input')
+def solve(input_file, rope_length):
+    lines = read_lines(input_file)
 
     start_pos = Pos(0, 0)
     knot_positions = [start_pos] * rope_length
@@ -21,7 +20,6 @@ def main():
     for line in lines:
         direction, count = splits(line)
         count = int(count)
-        # print('move', direction, count)
 
         for _ in range(count):
             for i, knot_pos in enumerate(knot_positions):
@@ -53,13 +51,7 @@ def main():
             visited.add(knot_positions[-1])
         # visualize(knot_positions)
 
-    # print('visited', visited)
-    visited_count = len(visited)
-    print('visited location count:', visited_count)
-    if rope_length == 2:
-        assert visited_count == 6243
-    else:
-        assert visited_count == 2630
+    return len(visited)
 
 
 def move(pos, direction=None):
@@ -89,6 +81,18 @@ def visualize(knot_positions):
                 print('.', end='')
         print()
     print()
+
+
+def main():
+    real_input = True
+
+    if real_input:
+        run(__file__, solve, 'input', 6243, rope_length=2)
+        run(__file__, solve, 'input', 2630, rope_length=10)
+    else:
+        run(__file__, solve, 'example', 13, rope_length=2)
+        run(__file__, solve, 'example', 1, rope_length=10)
+        run(__file__, solve, 'example2', 36, rope_length=10)
 
 
 if __name__ == '__main__':

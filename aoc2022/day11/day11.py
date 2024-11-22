@@ -4,8 +4,8 @@ from functools import reduce
 import operator
 
 
-def main():
-    lines = deque(read_lines('input'))
+def solve(input_file, rounds):
+    lines = deque(read_lines(input_file))
 
     monkeys = {}
     while len(lines) > 0:
@@ -19,21 +19,13 @@ def main():
             'inspections': 0,
         }
 
-    for i, m in enumerate(monkeys.values()):
-        print(f'm{i}', m)
+    # for i, m in enumerate(monkeys.values()):
+    #     print(f'm{i}', m)
 
     divisor_product = reduce(operator.mul, (m['divisor'] for m in monkeys.values()))
-    print('divisor_product:', divisor_product)
-
-    p1 = False
-    if p1:
-        rounds = 20
-    else:
-        rounds = 10000
+    # print('divisor_product:', divisor_product)
 
     for rnd in range(rounds):
-        if rnd % 1000 == 0:
-            print('round', rnd)
         for turn in range(len(monkeys)):
             monkey = monkeys[turn]
             items = monkey['items']
@@ -41,7 +33,7 @@ def main():
                 monkey['inspections'] += 1
                 item = items.popleft()
                 item = apply_op(monkey['operation'], item) % divisor_product
-                if p1:
+                if rounds <= 20:
                     item //= 3
                 if item % monkey['divisor'] == 0:
                     target_monkey = monkey['target_true']
@@ -50,15 +42,9 @@ def main():
                 monkeys[target_monkey]['items'].append(item)
 
     inspections = [monkey['inspections'] for monkey in monkeys.values()]
-    print('inspections:', inspections)
+    # print('inspections:', inspections)
     sorted_inspections = sorted(inspections, reverse=True)
-    monkey_business = sorted_inspections[0] * sorted_inspections[1]
-    print('monkey business:', monkey_business)
-    if p1:
-        assert monkey_business == 78678
-    else:
-        assert inspections == [123834, 112260, 118063, 123821, 11603, 118089, 123818, 55724]
-        assert monkey_business == 15333249714
+    return sorted_inspections[0] * sorted_inspections[1]
 
 
 def apply_op(operation, item):
@@ -76,6 +62,17 @@ def apply_op(operation, item):
         assert False
 
     return new_value
+
+
+def main():
+    _input_file = 'input'
+    expected = {
+        'input': (78678, 15333249714),
+        'example': (10605, 2713310158),
+    }[_input_file]
+
+    run(__file__, solve, _input_file, expected[0], rounds=20)
+    run(__file__, solve, _input_file, expected[1], rounds=10000)
 
 
 if __name__ == '__main__':
