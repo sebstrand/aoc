@@ -1,7 +1,7 @@
 import numpy as np
 
 from collections import deque
-from aocl import neighbors_2d, PriorityQueue
+from aocl import neighbors_2d, PriorityQueue, p2d
 
 
 def dijkstra(cost, start_pos=(0,0), end_pos=None, dtype=np.uint32):
@@ -65,3 +65,9 @@ def path_from_prev(prev, start_pos, end_pos):
         path.appendleft(pos)
         pos = prev.get(pos)
     return path
+
+
+def manhattan(pos1, pos2):
+    if pos1 == pos2:
+        return 0
+    return abs(pos1.y - pos2.y) + abs(pos1.x - pos2.x)

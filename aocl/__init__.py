@@ -12,4 +12,5 @@ from aocl.lib import run
 from aocl.lib import visit
 from aocl.lib import p2d, p3d
 
-from aocl.path import dijkstra, path_from_prev
+from aocl.path import dijkstra, path_from_prev, manhattan
+from aocl.interval import Intervals
