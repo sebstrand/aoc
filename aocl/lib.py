@@ -14,6 +14,8 @@ from pathlib import Path
 
 
 digit_names = ('zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine')
+p2d = namedtuple('point2d', ['y', 'x'])
+p3d = namedtuple('point3d', ['y', 'x', 'z'])
 
 _labeline_n_re = re.compile(r'([^\d]*?) *(\d+):\s*(.*)')
 _labeline_re = re.compile(r'([^:]*):\s*(.*)')
