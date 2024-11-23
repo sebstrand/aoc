@@ -11,6 +11,7 @@ from collections import namedtuple
 from functools import reduce
 from heapq import heappush, heappop
 from pathlib import Path
+from datetime import datetime
 
 
 digit_names = ('zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine')
@@ -26,7 +27,7 @@ def run(puzzle, f, input_file, expected_answer, *args, **kwargs):
     puzzle_path = Path(puzzle).parent
     input_file = puzzle_path.joinpath(input_file)
     _fetch_puzzle_input(puzzle_path)
-    print('\nRunning', puzzle_path)
+    print(f'\nRunning ({datetime.now()})', puzzle_path)
     print(f'  Input = "{input_file.relative_to(puzzle_path)}"')
     print('  Args =', args, kwargs)
     start = time.time()
