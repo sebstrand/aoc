@@ -14,3 +14,5 @@ from aocl.lib import p2d, p3d
 
 from aocl.path import dijkstra, path_from_prev, manhattan
 from aocl.interval import Intervals
+
+from aocl.treap import Treap
