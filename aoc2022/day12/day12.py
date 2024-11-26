@@ -50,12 +50,13 @@ def solve(input_file, p1=True):
                 costs[direction][(r, c)] = cost
 
     if p1:
-        path = dijkstra(costs, start, target, dtype=dtype)
-        return len(path) - 1
+        _, path = dijkstra_grid(costs, start, target)
+        return len(path_from_prev(path, start, target)) - 1
     else:
         path_lengths = []
         for start in possible_starts:
-            path = dijkstra(costs, start, target, dtype=dtype)
+            _, prev = dijkstra_grid(costs, start, target)
+            path = path_from_prev(prev, start, target)
             if len(path) > 0:
                 path_lengths.append(len(path) - 1)
         return min(path_lengths)

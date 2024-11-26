@@ -4,23 +4,20 @@ from collections import deque
 from aocl import neighbors_2d, PriorityQueue, p2d
 
 
-def dijkstra(cost, start_pos=(0,0), end_pos=None, dtype=np.uint32):
-    """Path finding using Dijkstra's algorithm. Returns just the path as a deque if an end_pos is specified, otherwise
-    returns a tuple of (distances, prev). Distances then is a grid that contains the distance to every node and prev is
-    a dict that maps each node (position) to the node used to get there.
+def dijkstra_grid(cost, start_pos=(0,0), end_pos=None):
+    """Path finding in a grid using Dijkstra's algorithm. Cost should be a dict of 2d numpy arrays signifying he cost of
+    moving to that position when going in the direction that is the dict key (nswe). Returns just the path as a deque if
+    an end_pos is specified, otherwise returns a tuple of (distances, prev). Distances then is a grid that contains the
+    distance to every node and prev is a dict that maps each node (position) to the node used to get there. Specify
+    end_pos to stop when distance to that position has been found.
 
-    >>> dijkstra({d: np.ones((3,3)) for d in 'nswe'}, (0,0))
-    (array([[0, 1, 2],
-           [1, 2, 3],
-           [2, 3, 4]], dtype=uint32), {(1, 0): (0, 0), (0, 1): (0, 0), (1, 1): (0, 1), (0, 2): (0, 1), (2, 0): (1, 0), (1, 2): (0, 2), (2, 1): (1, 1), (2, 2): (1, 2)})
-
-    >>> cost = np.ones((3,3))
-    >>> cost[(0, 1)], cost[(1, 1)], cost[(1, 2)] = 2, 3, 4
-    >>> dijkstra({d: cost for d in 'nswe'}, end_pos=(2,2), dtype=np.uint8)
-    deque([(0, 0), (1, 0), (2, 0), (2, 1), (2, 2)])
+    >>> dijkstra_grid({d: np.ones((3,3)) for d in 'nswe'}, (0,0))
+    (array([[0., 1., 2.],
+           [1., 2., 3.],
+           [2., 3., 4.]]), {(1, 0): (0, 0), (0, 1): (0, 0), (1, 1): (0, 1), (0, 2): (0, 1), (2, 0): (1, 0), (1, 2): (0, 2), (2, 1): (1, 1), (2, 2): (1, 2)})
     """
     rows, cols = cost['n'].shape
-    distances = np.zeros((rows, cols), dtype=dtype) + np.inf
+    distances = np.zeros((rows, cols)) + np.inf
     distances[start_pos] = 0
     prev = dict()
 
@@ -45,10 +42,47 @@ def dijkstra(cost, start_pos=(0,0), end_pos=None, dtype=np.uint32):
                 prev[n_pos] = pos
                 q.add(distance_to_n, n_pos)
 
-    if end_pos:
-        return path_from_prev(prev, start_pos, end_pos)
-    else:
-        return distances, prev
+    return distances, prev
+
+
+def dijkstra(edges, start_vertex=0, end_vertex=None):
+    """Path finding using Dijkstra's algorithm with an adjacency matrix as input. Each row in the adjacency matrix
+    should map the distance from vertex <row> to vertex <col>. A zero means there is no edge (in that direction) between
+    the vertices. Returns just the path as a deque if an end_pos is specified, otherwise returns a tuple of
+    (distances, prev). Distances then is a grid that contains the distance to every node and prev is a dict that maps
+    each node (position) to the node used to get there. Specify end_vertex to stop when distance to that vertex has been
+    found.
+
+    >>> e = np.array([[0, 1, 0, 0],[0, 0, 2, 0], [0, 0, 0, 1], [0, 0, 0, 0]])
+    >>> dijkstra(e, 0)
+    (array([0., 1., 3., 4.]), {1: 0, 2: 1, 3: 2})
+    """
+    n_vertices = edges.shape[0]
+    distances = np.zeros(n_vertices) + np.inf
+    distances[start_vertex] = 0
+    prev = dict()
+
+    q = PriorityQueue()
+    q.add(0, start_vertex)
+    while len(q) > 0:
+        vertex = q.pop()
+        if vertex == end_vertex:
+            break
+
+        row = edges[vertex]
+        for v_neighbor in np.nonzero(row)[0]:
+            if distances[v_neighbor] < np.inf:
+                continue # visited
+
+            edge_dist = row[v_neighbor]
+            distance_to_n = distances[vertex] + edge_dist
+            if distance_to_n < distances[v_neighbor]:
+                distances[v_neighbor] = distance_to_n
+                v_neighbor = int(v_neighbor)
+                prev[v_neighbor] = vertex
+                q.add(float(distance_to_n), v_neighbor)
+
+    return distances, prev
 
 
 def path_from_prev(prev, start_pos, end_pos):
@@ -59,9 +93,9 @@ def path_from_prev(prev, start_pos, end_pos):
     deque([(0, 0), (1, 0), (1, 1)])
     """
     pos = end_pos
-    if not prev.get(pos) and pos != start_pos: return deque()
+    if not pos in prev and pos != start_pos: return deque()
     path = deque()
-    while pos:
+    while pos is not None:
         path.appendleft(pos)
         pos = prev.get(pos)
     return path
