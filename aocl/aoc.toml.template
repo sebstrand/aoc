@@ -1,0 +1,8 @@
+# Put this file in ~/.config/aoc.toml and update the values below
+
+# The location of the git checkout on disk
+project_location = "~/aoc/"
+
+# The website session cookie, for downloading input files
+session_cookie = "copy adventofcode.com session cookie from browser into here"
+
