@@ -52,7 +52,7 @@ def labeline(line, numbered=True):
             )
 
 
-def ints(s, sep=(r' ',)):
+def ints(s, sep=(r'\D+',)):
     return splits(s, sep, int)
 
 
