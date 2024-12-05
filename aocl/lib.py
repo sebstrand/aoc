@@ -25,8 +25,11 @@ _labeline_type = namedtuple('labeline', ['label', 'number', 'content'])
 
 def run(puzzle, f, input_file, expected_answer, *args, **kwargs):
     puzzle_path = Path(puzzle).parent
-    input_file = puzzle_path.joinpath(input_file)
-    _fetch_puzzle_input(puzzle_path)
+    year, day = ints(puzzle_path.as_posix())[-2:]
+    input_dir = puzzle_path.joinpath(f'../../input/{year}/{day:02d}')
+    _fetch_puzzle_input(input_dir)
+
+    input_file = input_dir.joinpath(input_file)
     print(f'\nRunning ({datetime.now()})', puzzle_path)
     print(f'  Input = "{input_file.relative_to(puzzle_path)}"')
     print('  Args =', args, kwargs)
@@ -59,9 +62,9 @@ def _format_answer(answer):
     return output
 
 
-def _fetch_puzzle_input(puzzle_path):
-    year, day = ints(puzzle_path.as_posix())[-2:]
-    input_file = puzzle_path.joinpath('input')
+def _fetch_puzzle_input(input_dir):
+    year, day = ints(input_dir.as_posix())[-2:]
+    input_file = input_dir.joinpath('input')
     if not input_file.exists():
         conf = _read_aoc_config()
         cookies = {'session': conf.get('session_cookie')}
@@ -72,6 +75,7 @@ def _fetch_puzzle_input(puzzle_path):
         with open(input_file.as_posix(), 'wb') as f:
             f.write(r.content)
         print('done!')
+    return input_file
 
 
 def _read_aoc_config():

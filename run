@@ -6,5 +6,5 @@ PYTHONPATH="..:$PYTHONPATH" \
         --scope \
         --property MemoryAccounting=1 \
         --property MemoryMax=35G \
-    python "day$1/day$1.py"
+    python "$1/day${1#0}.py"
 

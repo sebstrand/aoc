@@ -1,11 +1,12 @@
 #!/usr/bin/bash
 
-DIR="day$1"
+DIR="$1"
+YEAR=$( basename $PWD )
 if [ -d "$DIR" ];
 then
     echo "$DIR already exists"
 else
     mkdir $DIR
-    touch $DIR/example
-    cp ../aocl/stub.py $DIR/"day$1".py
+    touch ../input/$YEAR/$DIR/example
+    cp ../aocl/stub.py $DIR/"day${1#0}".py
 fi
