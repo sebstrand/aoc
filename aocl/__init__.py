@@ -7,3 +7,4 @@ from aocl.lib import visit
 from aocl.lib import factors, prime_factors
 from aocl.lib import neighbors_2d, visualize_grid
 from aocl.lib import contains_sublist
+from aocl.lib import polygon_area

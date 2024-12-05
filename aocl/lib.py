@@ -1,4 +1,5 @@
 import itertools
+import numpy as np
 import re
 import requests
 import time
@@ -210,3 +211,12 @@ def contains_sublist(lst, sublist):
             if lst[i] == sublist[0] and lst[i:i + len(sublist)] == sublist:
                 return True
     return False
+
+
+def polygon_area(coordinates):
+    x = [x for x, _ in coordinates]
+    y = [y for _, y in coordinates]
+    return 0.5 * np.abs(
+        + np.dot(x, np.roll(y, 1))
+        - np.dot(y, np.roll(x, 1))
+    )
