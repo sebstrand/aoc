@@ -1,52 +1,82 @@
+import numpy as np
 from aocl import *
+
+
+direction_to_steps = {
+    1: (-1, +0),
+    2: (+0, +1),
+    3: (+1, +0),
+    4: (+0, -1),
+}
+
+
+VISITED = 9
 
 
 def solve(input_file, p1=True):
     lines = read_lines(input_file)
 
-    area = {}
+    area = np.zeros((len(lines), len(lines[0])), dtype=np.uint8)
     guard_pos = None
     for row, line in enumerate(lines):
         for col, char in enumerate(line):
-            pos = row * -1j + col
             if char == '^':
-                guard_pos = pos
-                char = '.'
-            area[pos] = char
+                guard_pos = row, col
+            elif char == '#':
+                area[row, col] = 1
 
-    guard_path, is_loop = patrol(area, guard_pos)
+    visited_locations, is_loop = patrol(area, guard_pos)
     assert not is_loop
 
     if p1:
-        return len(guard_path)
+        return np.count_nonzero(visited_locations == VISITED)
     else:
         # Count positions in the guard path where an obstacle causes a loop
-        return sum(
-            patrol(area | {pos: '#'}, guard_pos)[1]
-            for pos in guard_path if pos is not guard_pos and area[pos] == '.'
-        )
+        count = 0
+        for row, col in zip(*np.nonzero(visited_locations == VISITED)):
+            if (row, col) == guard_pos: continue
+            area[row, col] = 1
+            if patrol(area, guard_pos)[1]:
+                count += 1
+            area[row, col] = 0
+        return count
 
 
 def patrol(area, starting_pos):
-    direction = 1j + 0
-    guard_path = {starting_pos: direction}
+    direction = 1
     is_loop = False
-    pos = starting_pos
+    visited_locations = np.zeros(area.shape, dtype=np.uint8)
+    row, col = starting_pos
     while True:
-        pos += direction
-        tile = area.get(pos)
-        if tile is None:
+        r_step, c_step = direction_to_steps[direction]
+        if r_step != 0:
+            slices = np.s_[row::r_step, col]
+        else:
+            slices = np.s_[row, col::c_step]
+
+        obstacles = np.nonzero(area[slices])[0]
+        if len(obstacles) == 0:
+            # Guard left area
+            visited_locations[slices] = VISITED
             break
-        elif tile != '.':
-            pos -= direction
-            direction = direction * -1j
-        elif guard_path.get(pos) == direction:
+
+        obstacle_row = row + r_step * obstacles[0]
+        obstacle_col = col + c_step * obstacles[0]
+        if visited_locations[obstacle_row, obstacle_col] == direction:
             is_loop = True
             break
-        else:
-            guard_path[pos] = direction
 
-    return guard_path, is_loop
+        visited_locations[obstacle_row, obstacle_col] = direction
+        turning_point = obstacle_row - r_step, obstacle_col - c_step
+        visited_locations[slices][:obstacles[0]] = VISITED
+        row, col = turning_point
+        direction = rotate_right(direction)
+
+    return visited_locations, is_loop
+
+
+def rotate_right(direction):
+    return 1 if direction == 4 else direction + 1
 
 
 def main():
