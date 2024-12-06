@@ -14,7 +14,7 @@ def solve(input_file, p1=True):
         correct = []
         for i, pair in enumerate(packet_pairs):
             if compare(*pair) < 0:
-                correct.append(i+1) # 1-based indices
+                correct.append(i+1)  # 1-based indices
         return sum(correct)
     else:
         divider1, divider2 = [[2]], [[6]]
@@ -69,7 +69,7 @@ def compare(left, right):
         return compare([left], right)
     elif l_type == list and r_type == int:
         return compare(left, [right])
-    else: # both lists
+    else:  # both lists
         lengths = len(left), len(right)
         for i in range(min(lengths)):
             order = compare(left[i], right[i])

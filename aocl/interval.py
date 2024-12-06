@@ -51,7 +51,7 @@ class Intervals:
         return self
 
     def remove(self, start, end):
-        if end < self.min: return # Nothing to do
+        if end < self.min: return  # Nothing to do
 
         self._clean()
         intervals = []

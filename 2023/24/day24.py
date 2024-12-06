@@ -8,7 +8,7 @@ def solve(input_file, p1=True):
     for line in lines:
         nums = ints(line)
         hail.append(Hail(nums[:3], nums[3:]))
-    
+
     if 'example' in input_file.name:
         il_min, il_max = (7, 27)
     else:

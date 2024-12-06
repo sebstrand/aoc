@@ -2,9 +2,7 @@ import sys
 import math
 
 import numpy as np
-import heapq as hq
 from aocl import *
-from collections import deque
 
 
 def solve(input_file, p1=True, steps=0):
@@ -29,8 +27,8 @@ def solve(input_file, p1=True, steps=0):
         return len(locations)
     else:
         steppable = (
-            np.count_nonzero(garden[0::2,0::2] == 1) + np.count_nonzero(garden[1::2,1::2] == 1),
-            np.count_nonzero(garden[0::2,1::2] == 1) + np.count_nonzero(garden[1::2,0::2] == 1),
+            np.count_nonzero(garden[0::2, 0::2] == 1) + np.count_nonzero(garden[1::2, 1::2] == 1),
+            np.count_nonzero(garden[0::2, 1::2] == 1) + np.count_nonzero(garden[1::2, 0::2] == 1),
         )
         print('steppable', steppable)
 
@@ -81,7 +79,7 @@ def partially_reachable_tiles(garden, steps, start_pos):
             remain_set = (remain,)
         else:
             remain_set = (-remain, remain)
-    
+
         for tc in remain_set:
             if tr == 0:
                 tv = (-steps_to_next[0]+1, steps_to_next[0])
@@ -95,7 +93,7 @@ def partially_reachable_tiles(garden, steps, start_pos):
                     (tr-1) * rows + steps_to_next[0],
                     tr * rows + steps_to_next[0],
                 )
-            
+
             if tc == 0:
                 th = (-steps_to_next[1]+1, steps_to_next[1])
             elif tc < 0:
@@ -108,7 +106,6 @@ def partially_reachable_tiles(garden, steps, start_pos):
                     (tc-1) * cols + steps_to_next[1],
                     tc * cols + steps_to_next[1],
                 )
-            remainder = steps % 2
             inc_v = int(math.copysign(1, tv[1]-tv[0]))
             inc_h = int(math.copysign(1, th[1]-th[0]))
             yield tr, tc, range(tv[0], tv[1], inc_v), range(th[0], th[1], inc_h)

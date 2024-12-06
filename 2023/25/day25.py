@@ -28,24 +28,24 @@ def solve(input_file):
 def spectral_partition(components):
     component_names = list(components.keys())
     n = len(component_names)
-    
+
     # Create symmetric adjacency matrix (1 for each connected component pair)
     adjacency = np.zeros((n, n), dtype=np.float32)
     for i, connections in enumerate(components.values()):
         for connection in connections:
             j = component_names.index(connection)
             adjacency[i, j] = 1
-     
+
     # Create degree matrix (number of component connections on diagonal)
     degree = np.zeros((n, n), dtype=np.float32)
     for i, connections in enumerate(components.values()):
         degree[i, i] = len(connections)
-     
+
     # Get Fiedler vector (2nd Eigenvector) from Laplacian matrix
     laplace = degree - adjacency
     _, eig_vec = np.linalg.eigh(laplace)
     eig_vec2 = eig_vec[:, 1]
-     
+
     # Partition using sign of Fiedler vector
     a = set(c for i, c in enumerate(component_names) if eig_vec2[i] >= 0)
     b = set(c for i, c in enumerate(component_names) if eig_vec2[i] < 0)

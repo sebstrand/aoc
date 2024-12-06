@@ -80,7 +80,7 @@ def add_sand(grid, x_base):
         elif grid[y_hit, x + 1] == AIR:
             x = x + 1
             y = y_hit
-        else: # sand came to rest
+        else:  # sand came to rest
             grid[y_hit - 1, x] = SAND
             return True
 

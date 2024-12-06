@@ -113,7 +113,6 @@ def construct_optimal_path_dfs(city, start_pos, end_pos, distances, is_valid_mov
                     elif len(new_path) >= max_path_len:
                         pass
                     elif city[pos] < max_dist and distance[path[0]] < max_dist:
-                        # print('depth', len(new_path), new_heat_loss, abs(pos[0] - start_pos[0]) + abs(pos[1] - start_pos[1]))
                         # next_hops.append((distance[path[0]], new_heat_loss, new_path))
                         next_hops.append((distance[path[0]], len(next_hops), new_heat_loss, new_path))
 

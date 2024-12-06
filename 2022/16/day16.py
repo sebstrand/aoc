@@ -95,7 +95,7 @@ def create_optimized_adjacency_matrix(valves, start_valve):
 
     # Remove valves with no flow (except AA) from graph
     for i, valve in enumerate(valves):
-        if valve['name'] != start_valve and valve['flow'] == 0: # no flow
+        if valve['name'] != start_valve and valve['flow'] == 0:  # no flow
             # Connect all our neighbors to all other neighbors
             for n1 in np.nonzero(adjacent[i])[0]:
                 for n2 in np.nonzero(adjacent[i])[0]:
@@ -109,8 +109,8 @@ def create_optimized_adjacency_matrix(valves, start_valve):
                         adjacent[n1][n2] = dist
                         adjacent[n2][n1] = dist
             # Remove this node from graph
-            adjacent[i,:] = 0
-            adjacent[:,i] = 0
+            adjacent[i, :] = 0
+            adjacent[:, i] = 0
 
     adjacent_small = adjacent
     for i, row in enumerate(reversed(adjacent)):

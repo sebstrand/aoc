@@ -22,6 +22,7 @@ def solve(input_file, rope_length):
         count = int(count)
 
         for _ in range(count):
+            leader_pos = None
             for i, knot_pos in enumerate(knot_positions):
                 if i == 0:
                     knot_pos = move(knot_pos, direction)

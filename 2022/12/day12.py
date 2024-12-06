@@ -12,7 +12,7 @@ def solve(input_file, p1=True):
     lines = read_lines(input_file)
 
     rows, cols = len(lines), len(lines[0])
-    dtype=np.uint8
+    dtype = np.uint8
     heights = np.zeros((rows, cols), dtype=dtype)
     costs = {d: np.zeros((rows, cols), dtype=dtype) + np.inf for d in 'nswe'}
 

@@ -38,7 +38,7 @@ def solve(input_file, p1=True):
         if node.is_dir and min_size <= node.size <= max_size:
             collected_dirs.append(node)
 
-    traverse_tree(root, lambda node, level: collect_dirs_between( node, level, 0, 100000))
+    traverse_tree(root, lambda node, level: collect_dirs_between(node, level, 0, 100000))
     if p1:
         return sum(d.size for d in collected_dirs)
 
@@ -49,7 +49,7 @@ def solve(input_file, p1=True):
     available_space = disk_space - root.size
     space_to_free = required_free_space - available_space
     # print('space to free:', space_to_free)
-    traverse_tree(root, lambda node, level: collect_dirs_between( node, level, space_to_free, math.inf))
+    traverse_tree(root, lambda node, level: collect_dirs_between(node, level, space_to_free, math.inf))
     # print('deletion candidate dirs:', collected_dirs)
     collected_dirs.sort(key=lambda node: node.size)
     dir_to_delete = collected_dirs[0]

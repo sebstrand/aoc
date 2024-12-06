@@ -4,13 +4,15 @@ from aocl import *
 def solve(input_file, p1=True):
     lines = read_lines(input_file)
 
-    pairs = (ints(l) for l in lines)
+    pairs = (ints(line) for line in lines)
     left, right = zip(*pairs)
 
     if p1:
-        return sum(abs(l - r) for l, r in zip(sorted(left), sorted(right)))
+        return sum(
+            abs(lx - rx)
+            for lx, rx in zip(sorted(left), sorted(right)))
     else:
-        return sum(l * right.count(l) for l in left)
+        return sum(lx * right.count(lx) for lx in left)
 
 
 def main():

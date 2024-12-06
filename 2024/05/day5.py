@@ -15,7 +15,6 @@ def solve(input_file, p1=True):
         elif ',' in line:
             updates.append(ints(line))
 
-    middle = lambda u: u[len(u) // 2]
     if p1:
         return sum(map(
             middle,
@@ -24,6 +23,10 @@ def solve(input_file, p1=True):
         return sum(map(
             middle,
             (sort_update(u, ordering) for u in updates if not is_ordered(u, ordering))))
+
+
+def middle(lst):
+    return lst[len(lst) // 2]
 
 
 def is_ordered(update, ordering):

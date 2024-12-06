@@ -6,7 +6,7 @@ MAX_PRIORITY = 99
 
 
 class TreapNode:
-    def __init__( self, item, left=None, right=None ):
+    def __init__(self, item, left=None, right=None):
         self.item = item
         self.left = left
         self.right = right
@@ -51,7 +51,7 @@ class TreapNode:
                 self.right, result = self.right.remove(item)
         return new_self, result
 
-    def print( self, level=0, label='' ):
+    def print(self, level=0, label=''):
         print(' ' * level, label, self.item, f' ({self.priority})', sep='')
         if self.left: self.left.print(level + 2, label='l:')
         if self.right: self.right.print(level + 2, label='r:')
@@ -94,7 +94,7 @@ class Treap:
     (1, 12, 3, False, True)
     """
 
-    def __init__( self ):
+    def __init__(self):
         self.root = None
         self._size = 0
 
@@ -139,7 +139,7 @@ class Treap:
     def has(self, item):
         return self._find(item) is not None
 
-    def print( self ):
+    def print(self):
         print(f'Treap(size={self._size})')
         if self.root:
             self.root.print(level=2, label='r:')

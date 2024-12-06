@@ -68,7 +68,7 @@ def _fetch_puzzle_input(input_dir):
     if not input_file.exists():
         conf = _read_aoc_config()
         cookies = {'session': conf.get('session_cookie')}
-        headers = { 'User-Agent': 'AoC runner by github.com/sebstrand' }
+        headers = {'User-Agent': 'AoC runner by github.com/sebstrand'}
         print(f'Fetching puzzle input for {year}/{day}...', end=' ', flush=True)
         r = requests.get(f'https://adventofcode.com/{year}/day/{day}/input',
                          cookies=cookies, headers=headers)

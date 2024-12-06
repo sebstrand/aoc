@@ -131,7 +131,6 @@ def arrange(arrangement, springs, groups, indent=4):
                     # arrangement[first_unset] = s
                     # arrangement[first_unset+1] = gs
                     # arrangement[last_unset] = e
-                    # print(' '*indent + 'found single', (s, gs, e), num_arrangements + 1, show_arrangement(arrangement))
                     # arrangement[first_unset:last_unset+1] = -1
                     num_arrangements += 1
                 elif is_last:  # (s, gs, len(remaining), ge, e)
@@ -140,7 +139,6 @@ def arrange(arrangement, springs, groups, indent=4):
                     # arrangement[first_unset+2] = len(remaining)
                     # arrangement[last_unset-1] = gs
                     # arrangement[last_unset] = e
-                    # print(' '*indent + 'found last', (s, gs, len(remaining), gs, e), num_arrangements + 1, show_arrangement(arrangement))
                     # arrangement[first_unset:last_unset+1] = -1
                     num_arrangements += 1
                 elif inner_groups is None:  # (s, gs, ge, e)
@@ -156,8 +154,6 @@ def arrange(arrangement, springs, groups, indent=4):
                     arrangement[first_unset+1] = -1
                     arrangement[last_unset-1] = -1
                     arrangement[last_unset] = -1
-            # else:
-                # print(' '*indent + '=> no 3', test_s, remaining_springs[:len(test_s)], '*', test_e, remaining_springs[-len(test_e):], 'slen', len(remaining_springs))
     # print(' '*indent + 'arrange complete', num_arrangements)
     return num_arrangements
 

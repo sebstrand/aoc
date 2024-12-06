@@ -1,3 +1,4 @@
+# flake8: noqa
 from aocl.lib import PriorityQueue
 from aocl.lib import TermColors
 from aocl.lib import contains_sublist
@@ -15,3 +16,4 @@ from aocl.lib import p2d, p3d
 from aocl.path import dijkstra, dijkstra_grid, path_from_prev, manhattan
 from aocl.interval import Intervals
 from aocl.treap import Treap
+

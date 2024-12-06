@@ -1,5 +1,4 @@
 import numpy as np
-import sys
 from aocl import *
 
 
@@ -60,11 +59,11 @@ def check_view_dist(heights, view_dist_left, view_dist_right, view_dist_up, view
         for x in range(n_cols):
             height = heights[y, x]
 
-            view_dist_left  [y, x] = get_view_dist(heights, height, range(x-1,     -1, -1), range(y, y+1), x, y)
-            view_dist_right [y, x] = get_view_dist(heights, height, range(x+1, n_cols,  1), range(y, y+1), x, y)
+            view_dist_left [y, x] = get_view_dist(heights, height, range(x-1,     -1, -1), range(y, y+1), x, y)  # noqa: E211, E501
+            view_dist_right[y, x] = get_view_dist(heights, height, range(x+1, n_cols,  1), range(y, y+1), x, y)  # noqa: E211, E501
 
-            view_dist_up    [y, x] = get_view_dist(heights, height, range(x, x+1), range(y-1,     -1, -1), x, y)
-            view_dist_down  [y, x] = get_view_dist(heights, height, range(x, x+1), range(y+1, n_rows,  1), x, y)
+            view_dist_up   [y, x] = get_view_dist(heights, height, range(x, x+1), range(y-1,     -1, -1), x, y)  # noqa: E211, E501
+            view_dist_down [y, x] = get_view_dist(heights, height, range(x, x+1), range(y+1, n_rows,  1), x, y)  # noqa: E211, E501
 
 
 def get_view_dist(heights, tree_height, range_x, range_y, x, y):

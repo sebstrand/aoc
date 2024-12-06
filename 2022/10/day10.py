@@ -12,7 +12,7 @@ def solve(input_file, p1=True):
         args = [int(x) for x in parts[1:]]
         instructions.append((command, args))
 
-    display = [ ['.'] * 40 for i in range(6) ]
+    display = [['.'] * 40 for i in range(6)]
 
     cpu = Cpu(instructions, display, trace=False)
     signal_strength_sum = 0

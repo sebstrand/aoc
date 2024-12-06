@@ -92,5 +92,6 @@ def main():
     run(__file__, solve, _input_file, expected[0], cycles=0)
     run(__file__, solve, _input_file, expected[1], cycles=1000000000)
 
+
 if __name__ == '__main__':
     main()

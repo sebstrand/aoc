@@ -7,8 +7,8 @@ def solve(input_file, p1=True):
     packet_markers = []
     message_markers = []
     for line in lines:
-        packet_markers.append( find_marker(line, 4))
-        message_markers.append( find_marker(line, 14))
+        packet_markers.append(find_marker(line, 4))
+        message_markers.append(find_marker(line, 14))
 
     if p1:
         return packet_markers
@@ -16,10 +16,10 @@ def solve(input_file, p1=True):
         return message_markers
 
 
-def find_marker(s, l):
-    for i in range(l, len(s)):
-        the_set = set(s[i-l:i])
-        if len(the_set) == l:
+def find_marker(s, n):
+    for i in range(n, len(s)):
+        the_set = set(s[i-n:i])
+        if len(the_set) == n:
             return i
     return -1
 

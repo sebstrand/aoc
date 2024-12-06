@@ -29,7 +29,7 @@ def solve(input_file, p1=True):
             location = nodes[location][direction]
             if (not p1 and location[-1] == 'Z') or (p1 and location == 'ZZZ'):
                 end = (location, mod_step)
-                if not end in ends:
+                if end not in ends:
                     ends.add(end)
                     steps[location].append(step)
                 break

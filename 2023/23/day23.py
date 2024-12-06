@@ -32,7 +32,7 @@ def bfs(trails, start_pos, end_pos):
     while len(q) > 0:
         path = q.popleft()
         for n_pos, n_value in neighbors_2d(trails, path.last_pos, valid_only=True):
-            if n_value != 1 and not n_pos in path.positions:
+            if n_value != 1 and n_pos not in path.positions:
                 new_path = path.extend(n_pos)
                 path_len = len(path.positions)
                 if path_len > max_path:
@@ -56,7 +56,7 @@ class Path:
     def __init__(self, initial_pos) -> None:
         self.positions = set()
         self.add(initial_pos)
-    
+
     def extend(self, next_pos):
         path = Path(next_pos)
         path.positions.update(self.positions)
@@ -163,7 +163,7 @@ def estimate_distance(pos1, pos2):
 def main():
     _input_file = 'input'
     expected = {
-        'input': (2166, None), # p2 > 3600, theoretical max 9411 (9412 steppable tiles)
+        'input': (2166, None),  # p2 > 3600, theoretical max 9411 (9412 steppable tiles)
         'example': (94, 154),
     }[_input_file]
 
