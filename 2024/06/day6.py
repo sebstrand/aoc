@@ -21,11 +21,10 @@ def solve(input_file, p1=True):
         return len(guard_path)
     else:
         # Count positions in the guard path where an obstacle causes a loop
-        potential_obstacles = (p for p in guard_path if p is not guard_pos and area[p] == '.')
-        return len([
-            p for p in potential_obstacles
-            if patrol(area | {p: '#'}, guard_pos)[1]
-        ])
+        return sum(
+            patrol(area | {pos: '#'}, guard_pos)[1]
+            for pos in guard_path if pos is not guard_pos and area[pos] == '.'
+        )
 
 
 def patrol(area, starting_pos):
@@ -38,12 +37,12 @@ def patrol(area, starting_pos):
         tile = area.get(pos)
         if tile is None:
             break
-        elif guard_path.get(pos) == direction:
-            is_loop = True
-            break
         elif tile != '.':
             pos -= direction
             direction = direction * -1j
+        elif guard_path.get(pos) == direction:
+            is_loop = True
+            break
         else:
             guard_path[pos] = direction
 
