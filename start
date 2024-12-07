@@ -2,13 +2,11 @@
 
 DIR="$1"
 YEAR=$( basename $PWD )
-if [ -d "$DIR" ];
+mkdir -p "$DIR"
+mkdir -p ../input/"$YEAR"/"$DIR/"
+touch ../input/"$YEAR"/"$DIR"/example
+if [ ! -e "$DIR"/"day${1#0}".py ];
 then
-    mkdir -p "$DIR"
-    mkdir -p ../input/"$YEAR"/"$DIR/"
-    touch ../input/"$YEAR"/"$DIR"/example
-    if [ ! -e "$DIR"/"day${1#0}".py ];
-    then
-      cp ../aocl/stub.py "$DIR"/"day${1#0}".py
-    fi
+    cp ../aocl/stub.py "$DIR"/"day${1#0}".py
 fi
+
