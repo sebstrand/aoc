@@ -6,10 +6,10 @@ from aocl import neighbors_2d, PriorityQueue
 
 def dijkstra_grid(cost, start_pos=(0, 0), end_pos=None):
     """Path finding in a grid using Dijkstra's algorithm. Cost should be a dict of 2d numpy arrays signifying he cost of
-    moving to that position when going in the direction that is the dict key (nswe). Returns just the path as a deque if
-    an end_pos is specified, otherwise returns a tuple of (distances, prev). Distances then is a grid that contains the
-    distance to every node and prev is a dict that maps each node (position) to the node used to get there. Specify
-    end_pos to stop when distance to that position has been found.
+    moving to that position when going in the direction that is the dict key (nswe). Returns a tuple of
+    (distances, prev). Distances is a grid that contains the distance to every node and prev is a dict that maps each
+    node (position) to the node used to get there. Specify end_pos to stop when distance to that position has been
+    found, in that case the distances grid will be incomplete.
 
     >>> dist, prev = dijkstra_grid({d: np.ones((3,3)) for d in 'nswe'}, (0,0))
     >>> dist
