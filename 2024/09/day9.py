@@ -1,4 +1,5 @@
 import numpy as np
+from collections import defaultdict
 from aocl import *
 
 
@@ -48,32 +49,40 @@ def move_blocks(disk, files):
         disk[usable[:size]] = file_id
 
 
-def move_files(disk, files, free):
+def move_files(disk, files, free_list):
+    free = defaultdict(PriorityQueue)
+    max_size = max(size for _, size in free_list)
+    for location, size in free_list:
+        free[size].add(location, location)
+
     for file_id, file_location, file_size in reversed(files):
-        for i, (free_location, free_size) in enumerate(free):
+        for free_size in range(file_size, max_size + 1):
+            if free_size not in free or len(free[free_size]) == 0: continue
+
+            free_location = free[free_size].pop()
             if free_location > file_location:
                 # Can only move files towards start of disk
-                break
+                continue
             elif free_size >= file_size:
                 disk[file_location:file_location + file_size] = FREE
                 disk[free_location:free_location + file_size] = file_id
                 if free_size > file_size:
-                    # Replace free block with smaller block
-                    new_free_block = [(free_location + file_size, free_size - file_size)]
-                else:
-                    new_free_block = []
-                free = free[:i] + new_free_block + free[i+1:]
+                    # Reinsert smaller block
+                    new_location = free_location + file_size
+                    new_size = free_size - file_size
+                    free[new_size].add(new_location, new_location)
                 break
 
 
 def main():
-    _input_file = 'input'
+    _input_file = 'input2'
     expected = {
         'input': (6310675819476, 6335972980679),
+        'input2': (None, 97898222299196),
         'example': (1928, 2858),
     }[_input_file]
 
-    run(__file__, solve, _input_file, expected[0], p1=True)
+    # run(__file__, solve, _input_file, expected[0], p1=True)
     run(__file__, solve, _input_file, expected[1], p1=False)
 
 
