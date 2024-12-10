@@ -3,34 +3,23 @@ import numpy as np
 from aocl import *
 
 
-inverse_direction = {'n': 's', 's': 'n', 'w': 'e', 'e': 'w'}
-
-
 def solve(input_file, p1=True):
     lines = read_lines(input_file)
 
-    rows, cols = len(lines), len(lines[0])
-    dtype = np.int8
-
     # Build height map
-    heights = np.zeros((rows, cols), dtype=dtype)
-    for r, line in enumerate(lines):
-        for c, char in enumerate(line):
-            if char not in string.digits: continue
-            heights[(r, c)] = int(char)
+    heights = gridify(lines, int, valid=string.digits, default=-1, dtype=np.int8)
+    rows, cols = heights.shape
 
     # Build cost maps
-    costs = {d: np.zeros((rows, cols), dtype=dtype) + np.inf for d in 'nswe'}
-    for r, row in enumerate(heights):
-        for c, col in enumerate(row):
-            height = heights[(r, c)]
-            for n, (n_pos, n_height) in neighbors_2d(heights, (r, c), named=True, valid_only=True).items():
-                if n_height == height - 1:
-                    cost = 1
-                else:
-                    cost = np.inf
-                direction = inverse_direction[n]
-                costs[direction][(r, c)] = cost
+    costs = {
+        'n': np.vstack([heights[:-1, :] - heights[1:, :], np.full((1, cols), np.inf)]),
+        'w': np.hstack([heights[:, :-1] - heights[:, 1:], np.full((rows, 1), np.inf)]),
+        's': np.vstack([np.full((1, cols), np.inf), heights[1:, :] - heights[:-1, :]]),
+        'e': np.hstack([np.full((rows, 1), np.inf), heights[:, 1:] - heights[:, :-1]])
+    }
+    for k in costs.keys():
+        # Only height diffs != 1 are usable
+        costs[k][costs[k] != 1] = -1
 
     result = 0
     for trailhead in zip(*np.where(heights == 0)):
