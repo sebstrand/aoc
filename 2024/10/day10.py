@@ -17,9 +17,9 @@ def solve(input_file, p1=True):
         's': np.vstack([np.full((1, cols), np.inf), heights[1:, :] - heights[:-1, :]]),
         'e': np.hstack([np.full((rows, 1), np.inf), heights[:, 1:] - heights[:, :-1]])
     }
-    for k in costs.keys():
+    for d_costs in costs.values():
         # Only height diffs != 1 are usable
-        costs[k][costs[k] != 1] = -1
+        d_costs[d_costs != 1] = -1
 
     result = 0
     for trailhead in zip(*np.where(heights == 0)):

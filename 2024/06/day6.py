@@ -16,14 +16,9 @@ VISITED = 9
 def solve(input_file, p1=True):
     lines = read_lines(input_file)
 
-    area = np.zeros((len(lines), len(lines[0])), dtype=np.uint8)
-    guard_pos = None
-    for row, line in enumerate(lines):
-        for col, char in enumerate(line):
-            if char == '^':
-                guard_pos = row, col
-            elif char == '#':
-                area[row, col] = 1
+    area = gridify(lines, lambda c: {'^': 2, '#': 1}[c], valid='^#', default=0, dtype=np.int8)
+    guard_pos = next(zip(*np.where(area == 2)))
+    area[guard_pos] = 0
 
     visited_locations, is_loop = patrol(area, guard_pos)
     assert not is_loop
