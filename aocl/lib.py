@@ -318,6 +318,28 @@ def polygon_area(coordinates):
     )
 
 
+def gridify(lines, convert, valid=None, default=-1, dtype=np.int32):
+    """Creates a numpy 2D array from a list of iterables, running the values through a converter
+    function and optionally checking if the value is in a collection first.
+
+    >>> gridify(['123','456','789'], int)
+    array([[1, 2, 3],
+           [4, 5, 6],
+           [7, 8, 9]], dtype=int32)
+    >>> gridify([('1','2'),'..',['3','4']], lambda x: int(x)**2, default=99, valid='0123456')
+    array([[ 1,  4],
+           [99, 99],
+           [ 9, 16]], dtype=int32)
+    """
+    rows, cols = len(lines), len(lines[0])
+    grid = np.full((rows, cols), default, dtype=dtype)
+    for r, line in enumerate(lines):
+        for c, char in enumerate(line):
+            if valid and char not in valid: continue
+            grid[r, c] = convert(char)
+    return grid
+
+
 class PriorityQueue:
     def __init__(self, max_q=False):
         self.max_q = max_q
