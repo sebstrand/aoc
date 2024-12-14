@@ -297,7 +297,7 @@ def draw_path(city, path):
     for r in range(rows):
         for c in range(cols):
             if (r, c) in path_set:
-                print(TermColors.CYAN, city[(r, c)], TermColors.ENDC, end='', sep='')
+                print(Terminal.CYAN, city[(r, c)], Terminal.ENDC, end='', sep='')
             else:
                 print(city[r, c], end='')
         print()

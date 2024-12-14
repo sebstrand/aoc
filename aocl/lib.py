@@ -371,7 +371,7 @@ class PriorityQueue:
         self.entries = {}
 
 
-class TermColors:
+class Terminal:
     BLUE = '\033[94m'
     CYAN = '\033[96m'
     GREEN = '\033[92m'
@@ -379,3 +379,4 @@ class TermColors:
     ENDC = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
+    CLEAR = '\033[2J'
