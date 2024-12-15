@@ -369,14 +369,3 @@ class PriorityQueue:
     def clear(self):
         self.pq = []
         self.entries = {}
-
-
-class Terminal:
-    BLUE = '\033[94m'
-    CYAN = '\033[96m'
-    GREEN = '\033[92m'
-    WARNING = '\033[93m'
-    ENDC = '\033[0m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
-    CLEAR = '\033[2J'

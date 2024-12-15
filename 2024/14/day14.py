@@ -104,7 +104,7 @@ def show(robots, room_size, middle=False):
             if not middle and (x == room_size[0] // 2 or y == room_size[1] // 2):
                 s = ' '
             else:
-                s = (Terminal.CYAN + str(count) + Terminal.ENDC) if count > 0 else '.'
+                s = term_effect(str(count), Terminal.B_CYAN) if count > 0 else '.'
             print(s, end='')
         print()
     print()

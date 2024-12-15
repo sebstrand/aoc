@@ -296,10 +296,11 @@ def draw_path(city, path):
     rows, cols = city.shape
     for r in range(rows):
         for c in range(cols):
+            char = str(city[r, c])
             if (r, c) in path_set:
-                print(Terminal.CYAN, city[(r, c)], Terminal.ENDC, end='', sep='')
+                print(term_effect(char, Terminal.B_CYAN), end='')
             else:
-                print(city[r, c], end='')
+                print(char, end='')
         print()
 
 

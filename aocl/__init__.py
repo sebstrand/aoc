@@ -1,6 +1,5 @@
 # flake8: noqa
 from aocl.lib import PriorityQueue
-from aocl.lib import Terminal
 from aocl.lib import contains_sublist
 from aocl.lib import digit_names
 from aocl.lib import factors, prime_factors
@@ -17,3 +16,5 @@ from aocl.path import dijkstra, dijkstra_grid, path_from_prev, manhattan
 from aocl.interval import Intervals
 from aocl.treap import Treap
 
+from aocl.output import Terminal, BoxDraw
+from aocl.output import term_effect, box_char
