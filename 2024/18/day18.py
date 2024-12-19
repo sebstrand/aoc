@@ -81,7 +81,7 @@ def main():
     _input_file = 'input'
     expected = {
         'input': (278, (43, 12)),
-        'example': (22, (6,1)),
+        'example': (22, (6, 1)),
     }[_input_file]
     size = {
         'input': ((71, 71), 1024),
