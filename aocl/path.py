@@ -100,6 +100,7 @@ def path_from_prev(prev, start_pos, end_pos):
     path = deque()
     while pos is not None:
         path.appendleft(pos)
+        if pos == start_pos: break
         pos = prev.get(pos)
     return path
 
@@ -107,4 +108,4 @@ def path_from_prev(prev, start_pos, end_pos):
 def manhattan(pos1, pos2):
     if pos1 == pos2:
         return 0
-    return abs(pos1.y - pos2.y) + abs(pos1.x - pos2.x)
+    return abs(pos1[0] - pos2[0]) + abs(pos1[1] - pos2[1])
