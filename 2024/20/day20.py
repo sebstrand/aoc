@@ -41,7 +41,7 @@ def positions_in_range(p1, distance, positions):
         distance_available = distance - abs(p1[0] - y)
         for x in range(p1[1] - distance_available, p1[1] + distance_available + 1):
             p2 = (y, x)
-            if p2 in positions and manhattan(p1, p2) <= distance:
+            if p2 in positions:
                 yield p2
 
 
