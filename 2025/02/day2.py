@@ -19,7 +19,12 @@ def is_invalid(id: int, p1):
     # p2: See if ID consists of 2, 3, 4, ... repeating parts
     for div in range(2, 3 if p1 else str_len + 1):
         if str_len % div != 0: continue
+
         seq_len = str_len // div
+        # Optimization: ignore some obvious non-repeating sequences
+        if id_str[0] != id_str[seq_len]: continue
+        if id_str[seq_len - 1] != id_str[-1]: continue
+
         if id_str.count(id_str[:seq_len]) == div:
             return True
     return False
