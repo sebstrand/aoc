@@ -369,3 +369,18 @@ class PriorityQueue:
     def clear(self):
         self.pq = []
         self.entries = {}
+
+
+class CacheIgnore:
+    """A wrapper to make functools.cache ignore unhashable argument"""
+    def __init__(self, content):
+        self.content = content
+
+    def __getattr__(self, item):
+        return getattr(self.content, item)
+
+    def __getitem__(self, key):
+        return self.content[key]
+
+    def __hash__(self):
+        return hash(type(self))

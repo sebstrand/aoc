@@ -11,6 +11,7 @@ from aocl.lib import read_lines
 from aocl.lib import run
 from aocl.lib import visit
 from aocl.lib import p2d, p3d
+from aocl.lib import CacheIgnore
 
 from aocl.path import dijkstra, dijkstra_grid, path_from_prev, manhattan
 from aocl.interval import Intervals
